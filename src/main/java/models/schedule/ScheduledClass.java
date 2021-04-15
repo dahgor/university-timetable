@@ -1,4 +1,9 @@
-package models;
+package models.schedule;
+
+import models.Auditory;
+import models.Course;
+import models.Group;
+import models.Professor;
 
 public class ScheduledClass {
 

@@ -1,8 +1,10 @@
-package models;
+package models.schedule;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+
+import models.TimePeriod;
 
 public class ScheduledDay {
 
