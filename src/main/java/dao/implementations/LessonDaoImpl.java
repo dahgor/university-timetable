@@ -82,4 +82,40 @@ public class LessonDaoImpl implements LessonDao {
         }
         jdbc.update(queries.getQuery("assignLessonToTime"), lessonId, timeId);
     }
+
+    @Override
+    public List<Lesson> findLessonsWithCourse(int courseId) throws DaoException {
+        if (courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsWithCourse"), new Object[]{courseId},
+                new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsWithProfessor(int professorId) throws DaoException {
+        if (professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsWithProfessor"), new Object[]{professorId},
+                new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsWithGroup(int groupId) throws DaoException {
+        if (groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsWithGroup"), new Object[]{groupId},
+                new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsWithAuditory(int auditoryId) throws DaoException {
+        if (auditoryId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsWithAuditory"), new Object[]{auditoryId},
+                new LessonMapper());
+    }
 }
