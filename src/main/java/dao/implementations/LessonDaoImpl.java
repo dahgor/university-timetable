@@ -7,6 +7,7 @@ import dao.mappers.LessonMapper;
 import dao.interfaces.LessonDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Date;
 import java.util.List;
 
 public class LessonDaoImpl implements LessonDao {
@@ -118,4 +119,54 @@ public class LessonDaoImpl implements LessonDao {
         return jdbc.query(queries.getQuery("findLessonsWithAuditory"), new Object[]{auditoryId},
                 new LessonMapper());
     }
+
+    @Override
+    public List<Lesson> findLessonsForGroupForDay(int groupId, Date day) throws DaoException {
+        if (groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (day == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsForGroupForDay"),
+                new Object[]{groupId, day}, new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsForGroupForMonth(int groupId, Date month) throws DaoException {
+        if (groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (month == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsForGroupForMonth"),
+                new Object[]{groupId, month}, new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsForProfessorForDay(int professorId, Date day) throws DaoException {
+        if (professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (day == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsForProfessorForDay"),
+                new Object[]{professorId, day}, new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findLessonsForProfessorForMonth(int professorId, Date month) throws DaoException {
+        if (professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (month == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findLessonsForProfessorForMonth"),
+                new Object[]{professorId, month}, new LessonMapper());
+    }
+
+
 }
