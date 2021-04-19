@@ -75,6 +75,7 @@ public class LessonDaoImpl implements LessonDao {
                 new LessonMapper());
     }
 
+    @Override
     public void assignLessonToTime(int lessonId, int timeId) throws DaoException {
         if (lessonId <= 0 || timeId <= 0) {
             throw new DaoException(ID_ERROR);
