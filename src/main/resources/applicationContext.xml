@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="database.properties"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${driverClassName}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--    Property files-->
+    <bean id="groupPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/groupDao.properties"/>
+    </bean>
+
+    <bean id="studentPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/studentDao.properties"/>
+    </bean>
+
+    <bean id="professorPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/professorDao.properties"/>
+    </bean>
+
+    <bean id="coursePropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/courseDao.properties"/>
+    </bean>
+
+    <bean id="auditoryPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/auditoryDao.properties"/>
+    </bean>
+
+    <bean id="lessonPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/lessonDao.properties"/>
+    </bean>
+
+    <bean id="timePeriodPropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/timePeriodDao.properties"/>
+    </bean>
+
+    <bean id="timePropertiesFile" class="java.io.FileInputStream">
+        <constructor-arg value="./src/main/resources/daoProperties/timeDao.properties"/>
+    </bean>
+
+    <!--    Dao properties-->
+    <bean id="groupProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="groupPropertiesFile"/>
+    </bean>
+
+    <bean id="studentProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="studentPropertiesFile"/>
+    </bean>
+
+    <bean id="professorProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="professorPropertiesFile"/>
+    </bean>
+
+    <bean id="courseProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="coursePropertiesFile"/>
+    </bean>
+
+    <bean id="auditoryProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="auditoryPropertiesFile"/>
+    </bean>
+
+    <bean id="lessonProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="lessonPropertiesFile"/>
+    </bean>
+
+    <bean id="timePeriodProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="timePeriodPropertiesFile"/>
+    </bean>
+
+    <bean id="timeProperties" class="dao.DaoProperties" init-method="initialize">
+        <constructor-arg ref="timePeriodProperties"/>
+    </bean>
+
+    <!--    Dao classes-->
+    <bean id="groupDaoClass" class="dao.implementations.GroupDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="groupProperties"/>
+    </bean>
+
+    <bean id="studentDaoClass" class="dao.implementations.StudentDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="studentProperties"/>
+    </bean>
+
+    <bean id="professorDaoClass" class="dao.implementations.ProfessorDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="professorProperties"/>
+    </bean>
+
+    <bean id="courseDaoClass" class="dao.implementations.CourseDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="courseProperties"/>
+    </bean>
+
+    <bean id="auditoryDaoClass" class="dao.implementations.AuditoryDao">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="auditoryProperties"/>
+    </bean>
+
+    <bean id="lessonDaoClass" class="dao.implementations.LessonDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="lessonProperties"/>
+    </bean>
+
+    <bean id="timePeriodDaoClass" class="dao.implementations.TimePeriodDao">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="timePeriodProperties"/>
+    </bean>
+
+    <bean id="timeDaoClass" class="dao.implementations.TimeDaoImpl">
+        <property name="jdbc" ref="jdbcTemplate"/>
+        <property name="queries" ref="timeProperties"/>
+    </bean>
+
+</beans>
