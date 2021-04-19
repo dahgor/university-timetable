@@ -74,4 +74,11 @@ public class LessonDaoImpl implements LessonDao {
         return jdbc.query(queries.getQuery("findScheduledLessonsForTime"), new Object[]{timeId},
                 new LessonMapper());
     }
+
+    public void assignLessonToTime(int lessonId, int timeId) throws DaoException {
+        if (lessonId <= 0 || timeId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("assignLessonToTime"), lessonId, timeId);
+    }
 }
