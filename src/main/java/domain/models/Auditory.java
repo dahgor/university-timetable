@@ -1,4 +1,4 @@
-package models;
+package domain.models;
 
 public class Auditory {
 

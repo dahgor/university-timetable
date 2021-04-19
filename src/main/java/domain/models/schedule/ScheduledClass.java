@@ -1,9 +1,9 @@
-package models.schedule;
+package domain.models.schedule;
 
-import models.Auditory;
-import models.Course;
-import models.Group;
-import models.Professor;
+import domain.models.Auditory;
+import domain.models.Course;
+import domain.models.Group;
+import domain.models.Professor;
 
 public class ScheduledClass {
 

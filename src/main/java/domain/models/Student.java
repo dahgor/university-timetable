@@ -1,22 +1,20 @@
-package models;
+package domain.models;
 
-import java.util.Set;
-
-public class Professor {
+public class Student {
 
     private int id;
     private String firstName;
     private String lastName;
-    private Set<Course> courses;
+    private Group group;
 
-    public Professor() {
+    public Student() {
     }
 
-    public Professor(int id, String firstName, String lastName, Set<Course> courses) {
+    public Student(int id, String firstName, String lastName, Group group) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.courses = courses;
+        this.group = group;
     }
 
     public int getId() {
@@ -31,8 +29,8 @@ public class Professor {
         return lastName;
     }
 
-    public Set<Course> getCourses() {
-        return courses;
+    public Group getGroup() {
+        return group;
     }
 
     public void setId(int id) {
@@ -47,8 +45,8 @@ public class Professor {
         this.lastName = lastName;
     }
 
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     @Override
@@ -56,6 +54,7 @@ public class Professor {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((group == null) ? 0 : group.hashCode());
         result = prime * result + id;
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         return result;
@@ -69,11 +68,16 @@ public class Professor {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Professor other = (Professor) obj;
+        Student other = (Student) obj;
         if (firstName == null) {
             if (other.firstName != null)
                 return false;
         } else if (!firstName.equals(other.firstName))
+            return false;
+        if (group == null) {
+            if (other.group != null)
+                return false;
+        } else if (!group.equals(other.group))
             return false;
         if (id != other.id)
             return false;
@@ -87,7 +91,8 @@ public class Professor {
 
     @Override
     public String toString() {
-        return "Professor [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+        return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", group="
+                + group.getName() + "]";
     }
 
 }

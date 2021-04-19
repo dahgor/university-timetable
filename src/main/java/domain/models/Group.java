@@ -1,4 +1,4 @@
-package models;
+package domain.models;
 
 import java.util.Set;
 
