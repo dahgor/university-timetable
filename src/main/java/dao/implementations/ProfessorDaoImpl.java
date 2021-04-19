@@ -61,7 +61,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
     }
 
     @Override
-    public List<Professor> findAllRecords() {
+    public List<Professor> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new ProfessorMapper());
     }
 

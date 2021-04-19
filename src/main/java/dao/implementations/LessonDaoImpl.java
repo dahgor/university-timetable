@@ -62,7 +62,7 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public List<Lesson> findAllRecords() {
+    public List<Lesson> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new LessonMapper());
     }
 

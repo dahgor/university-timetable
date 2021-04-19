@@ -59,7 +59,7 @@ public class TimeDaoImpl implements TimeDao {
     }
 
     @Override
-    public List<Time> findAllRecords() {
+    public List<Time> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new TimeMapper());
     }
 

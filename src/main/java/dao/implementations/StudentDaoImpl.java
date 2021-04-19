@@ -59,7 +59,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> findAllRecords() {
+    public List<Student> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new StudentMapper());
     }
 

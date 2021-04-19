@@ -58,7 +58,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public List<Group> findAllRecords() {
+    public List<Group> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new GroupMapper());
     }
 

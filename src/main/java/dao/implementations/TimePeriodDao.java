@@ -61,7 +61,7 @@ public class TimePeriodDao implements Dao<TimePeriod> {
     }
 
     @Override
-    public List<TimePeriod> findAllRecords() {
+    public List<TimePeriod> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new TimePeriodMapper());
     }
 }

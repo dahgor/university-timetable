@@ -60,7 +60,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<Course> findAllRecords() {
+    public List<Course> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new CourseMapper());
     }
 

@@ -60,7 +60,7 @@ public class AuditoryDao implements Dao<Auditory> {
     }
 
     @Override
-    public List<Auditory> findAllRecords() {
+    public List<Auditory> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new AuditoryMapper());
     }
 }
