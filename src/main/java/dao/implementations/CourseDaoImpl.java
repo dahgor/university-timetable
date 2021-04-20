@@ -19,7 +19,10 @@ public class CourseDaoImpl implements CourseDao {
     public CourseDaoImpl() {
     }
 
-    public CourseDaoImpl(JdbcTemplate jdbc, DaoProperties queries) {
+    public CourseDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+        if (jdbc == null || queries == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbc;
         this.queries = queries;
     }
