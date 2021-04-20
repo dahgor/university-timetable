@@ -19,7 +19,10 @@ public class GroupDaoImpl implements GroupDao {
     public GroupDaoImpl() {
     }
 
-    public GroupDaoImpl(JdbcTemplate jdbcTemplate, DaoProperties properties) {
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate, DaoProperties properties) throws DaoException {
+        if (jdbcTemplate == null || properties == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbcTemplate;
         this.queries = properties;
     }
