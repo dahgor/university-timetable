@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AuditoryDaoTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:CreateTables.sql";
+    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
     public static final String AUDITORY_PROPERTIES =
             "./src/test/resources/daoProperties/auditoryDao.properties";
     public static final String NULL_ERROR = "Null is passed";
