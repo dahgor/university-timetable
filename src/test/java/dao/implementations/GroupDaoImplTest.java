@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GroupDaoImplTest {
     public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String AUDITORY_PROPERTIES =
-            "./src/test/resources/daoProperties/groupDao.properties";
+    public static final String PROPERTIES = "./src/test/resources/daoProperties/groupDao.properties";
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
     public static final int INVALID_ID = -1;
@@ -34,7 +33,7 @@ class GroupDaoImplTest {
                 .addScript(INIT_SCRIPT_FILE)
                 .build();
         jdbcTemplate = new JdbcTemplate(dataSource);
-        FileInputStream file = new FileInputStream(AUDITORY_PROPERTIES);
+        FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
     }
 
