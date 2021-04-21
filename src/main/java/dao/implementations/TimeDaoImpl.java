@@ -3,8 +3,8 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Time;
-import dao.mappers.TimeMapper;
 import dao.interfaces.TimeDao;
+import dao.mappers.TimeMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -19,7 +19,10 @@ public class TimeDaoImpl implements TimeDao {
     public TimeDaoImpl() {
     }
 
-    public TimeDaoImpl(JdbcTemplate jdbc, DaoProperties queries) {
+    public TimeDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+        if (jdbc == null || queries == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbc;
         this.queries = queries;
     }
