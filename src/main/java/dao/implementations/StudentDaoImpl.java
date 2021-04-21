@@ -3,8 +3,8 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Student;
-import dao.mappers.StudentMapper;
 import dao.interfaces.StudentDao;
+import dao.mappers.StudentMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -19,7 +19,10 @@ public class StudentDaoImpl implements StudentDao {
     public StudentDaoImpl() {
     }
 
-    public StudentDaoImpl(JdbcTemplate jdbc, DaoProperties queries) {
+    public StudentDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+        if (jdbc == null || queries == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbc;
         this.queries = queries;
     }
