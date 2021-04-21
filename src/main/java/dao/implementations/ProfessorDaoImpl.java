@@ -3,8 +3,8 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Professor;
-import dao.mappers.ProfessorMapper;
 import dao.interfaces.ProfessorDao;
+import dao.mappers.ProfessorMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -19,7 +19,10 @@ public class ProfessorDaoImpl implements ProfessorDao {
     public ProfessorDaoImpl() {
     }
 
-    public ProfessorDaoImpl(JdbcTemplate jdbc, DaoProperties queries) {
+    public ProfessorDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+        if (jdbc == null || queries == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbc;
         this.queries = queries;
     }
