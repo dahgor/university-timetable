@@ -35,7 +35,7 @@ class LessonDaoImplTest {
     private DaoProperties daoProperties;
 
     @BeforeEach
-    void prepareJdbcAndProperties() throws FileNotFoundException {
+    void prepareJdbcAndProperties() throws FileNotFoundException, DaoException {
         DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
                 .addScript(INIT_SCRIPT_FILE)
                 .build();

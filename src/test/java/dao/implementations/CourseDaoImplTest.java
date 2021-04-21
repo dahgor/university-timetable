@@ -2,7 +2,6 @@ package dao.implementations;
 
 import dao.DaoException;
 import dao.DaoProperties;
-import dao.entities.Auditory;
 import dao.entities.Course;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CourseDaoImplTest {
     public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
@@ -28,7 +28,7 @@ class CourseDaoImplTest {
     private DaoProperties daoProperties;
 
     @BeforeEach
-    void prepareJdbcAndProperties() throws FileNotFoundException {
+    void prepareJdbcAndProperties() throws FileNotFoundException, DaoException {
         DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
                 .addScript(INIT_SCRIPT_FILE)
                 .build();

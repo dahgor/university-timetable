@@ -10,12 +10,12 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AuditoryDaoTest {
     public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
@@ -28,7 +28,7 @@ class AuditoryDaoTest {
     private DaoProperties daoProperties;
 
     @BeforeEach
-    void prepareJdbcAndProperties() throws FileNotFoundException {
+    void prepareJdbcAndProperties() throws FileNotFoundException, DaoException {
         DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
                 .addScript(INIT_SCRIPT_FILE)
                 .build();
