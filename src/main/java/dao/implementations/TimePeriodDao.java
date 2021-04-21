@@ -3,8 +3,8 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.TimePeriod;
-import dao.mappers.TimePeriodMapper;
 import dao.interfaces.Dao;
+import dao.mappers.TimePeriodMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -19,7 +19,10 @@ public class TimePeriodDao implements Dao<TimePeriod> {
     public TimePeriodDao() {
     }
 
-    public TimePeriodDao(JdbcTemplate jdbc, DaoProperties queries) {
+    public TimePeriodDao(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+        if (jdbc == null || queries == null) {
+            throw new DaoException(NULL_ERROR);
+        }
         this.jdbc = jdbc;
         this.queries = queries;
     }
