@@ -22,14 +22,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LessonDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/lessonDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
-    public static final int VALID_ID = 1;
-    public static final int TIME_ID = 1;
-    public static final Date VALID_DATE = Date.valueOf(LocalDate.now());
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/lessonDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
+    private static final int VALID_ID = 1;
+    private static final int TIME_ID = 1;
+    private static final Date VALID_DATE = Date.valueOf(LocalDate.now());
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -42,6 +42,17 @@ class LessonDaoImplTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
+    }
+
+    void saveLesson(Lesson lesson) {
+        jdbcTemplate.update("insert into lessons(course_id, professor_id, group_id, auditory_id) " +
+                        "values (?, ?, ?, ?)", lesson.getCourseId(), lesson.getProfessorId(),
+                lesson.getGroupId(), lesson.getAuditoryId());
+    }
+
+    void assignLessonToTime(int lessonId, int timeId) {
+        jdbcTemplate.update("insert into schedule(lesson_id, time_id) values (?, ?)",
+                lessonId, timeId);
     }
 
     void prepareDataForOneLesson() {
@@ -206,10 +217,16 @@ class LessonDaoImplTest {
         prepareDataForOneLesson();
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson = new Lesson(1, 1, 1, 1, 1);
-        lessonDao.save(lesson);
-        Lesson result = lessonDao.findById(1);
 
-        assertEquals(lesson, result);
+        lessonDao.save(lesson);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
+
+        assertTrue(result.next());
+        assertEquals(lesson.getId(), result.getInt("lesson_id"));
+        assertEquals(lesson.getAuditoryId(), result.getInt("auditory_id"));
+        assertEquals(lesson.getCourseId(), result.getInt("course_id"));
+        assertEquals(lesson.getGroupId(), result.getInt("group_id"));
+        assertEquals(lesson.getProfessorId(), result.getInt("professor_id"));
     }
 
     @Test
@@ -217,14 +234,12 @@ class LessonDaoImplTest {
         prepareDataForOneLesson();
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson = new Lesson(1, 1, 1, 1, 1);
-        lessonDao.save(lesson);
-        List<Lesson> itemsFromDb = lessonDao.findAllRecords();
-        assertEquals(1, itemsFromDb.size());
+        saveLesson(lesson);
 
         lessonDao.deleteById(1);
-        itemsFromDb = lessonDao.findAllRecords();
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
 
-        assertEquals(0, itemsFromDb.size());
+        assertFalse(result.next());
     }
 
     @Test
@@ -233,8 +248,8 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
 
         List<Lesson> itemsFromDb = lessonDao.findAllRecords();
 
@@ -249,7 +264,7 @@ class LessonDaoImplTest {
         prepareDataForAssigning();
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson = new Lesson(1, 1, 1, 1, 1);
-        lessonDao.save(lesson);
+        saveLesson(lesson);
 
         lessonDao.assignLessonToTime(1, TIME_ID);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from schedule");
@@ -266,10 +281,10 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
-        lessonDao.assignLessonToTime(1, TIME_ID);
-        lessonDao.assignLessonToTime(2, TIME_ID);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
+        assignLessonToTime(lesson1.getId(), TIME_ID);
+        assignLessonToTime(lesson2.getId(), TIME_ID);
 
         List<Lesson> result = lessonDao.findScheduledLessonsForTime(TIME_ID);
 
@@ -285,10 +300,10 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
-        lessonDao.assignLessonToTime(1, TIME_ID);
-        lessonDao.assignLessonToTime(2, TIME_ID);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
+        assignLessonToTime(lesson1.getId(), TIME_ID);
+        assignLessonToTime(lesson2.getId(), TIME_ID);
 
         List<Lesson> result = lessonDao.findLessonsForGroupForDay(1,
                 Date.valueOf(LocalDate.now()));
@@ -304,10 +319,10 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
-        lessonDao.assignLessonToTime(1, TIME_ID);
-        lessonDao.assignLessonToTime(2, TIME_ID);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
+        assignLessonToTime(lesson1.getId(), TIME_ID);
+        assignLessonToTime(lesson2.getId(), TIME_ID);
 
         List<Lesson> result = lessonDao.findLessonsForGroupForMonth(2,
                 Date.valueOf(LocalDate.now()));
@@ -323,10 +338,10 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
-        lessonDao.assignLessonToTime(1, TIME_ID);
-        lessonDao.assignLessonToTime(2, TIME_ID);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
+        assignLessonToTime(lesson1.getId(), TIME_ID);
+        assignLessonToTime(lesson2.getId(), TIME_ID);
 
         List<Lesson> result = lessonDao.findLessonsForProfessorForDay(1,
                 Date.valueOf(LocalDate.now()));
@@ -342,10 +357,10 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
         Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
         Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
-        lessonDao.save(lesson1);
-        lessonDao.save(lesson2);
-        lessonDao.assignLessonToTime(1, TIME_ID);
-        lessonDao.assignLessonToTime(2, TIME_ID);
+        saveLesson(lesson1);
+        saveLesson(lesson2);
+        assignLessonToTime(lesson1.getId(), TIME_ID);
+        assignLessonToTime(lesson2.getId(), TIME_ID);
 
         List<Lesson> result = lessonDao.findLessonsForProfessorForMonth(2,
                 Date.valueOf(LocalDate.now()));

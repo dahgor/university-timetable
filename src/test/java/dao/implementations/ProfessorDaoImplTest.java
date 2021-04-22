@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
@@ -17,12 +18,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProfessorDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/professorDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
-    public static final int COURSE_ID = 1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/professorDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
+    private static final int COURSE_ID = 1;
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -40,6 +41,16 @@ class ProfessorDaoImplTest {
     void prepareDataForAssigning() {
         jdbcTemplate.execute("insert into courses(course_name, course_description) " +
                 "VALUES ('Math', 'description')");
+    }
+
+    void saveProfessor(Professor professor) {
+        jdbcTemplate.update("insert into professors(first_name, last_name) values (?, ?)",
+                professor.getFirstName(), professor.getLastName());
+    }
+
+    void assignProfessorToCourse(int professorId, int courseId) {
+        jdbcTemplate.update("insert into professor_course(professor_id, course_id) values(?, ?)",
+                professorId, courseId);
     }
 
     @Test
@@ -77,25 +88,26 @@ class ProfessorDaoImplTest {
     void shouldReturnSameAuditoryFromDbWhenSaved() throws DaoException {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor = new Professor(1, "Alan", "Smith");
+
         professorDao.save(professor);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professors");
 
-        Professor result = professorDao.findById(1);
-
-        assertEquals(professor, result);
+        assertTrue(result.next());
+        assertEquals(1, result.getInt("professor_id"));
+        assertEquals(professor.getFirstName(), result.getString("first_name"));
+        assertEquals(professor.getLastName(), result.getString("last_name"));
     }
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor = new Professor(1, "Alan", "Smith");
-        professorDao.save(professor);
-        List<Professor> itemsFromDb = professorDao.findAllRecords();
-        assertEquals(1, itemsFromDb.size());
+        saveProfessor(professor);
 
         professorDao.deleteById(1);
-        itemsFromDb = professorDao.findAllRecords();
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professors");
 
-        assertEquals(0, itemsFromDb.size());
+        assertFalse(result.next());
     }
 
     @Test
@@ -103,8 +115,8 @@ class ProfessorDaoImplTest {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor1 = new Professor(1, "Alan", "Smith");
         Professor professor2 = new Professor(2, "John", "Walker");
-        professorDao.save(professor1);
-        professorDao.save(professor2);
+        saveProfessor(professor1);
+        saveProfessor(professor2);
 
         List<Professor> itemsFromDb = professorDao.findAllRecords();
 
@@ -118,9 +130,14 @@ class ProfessorDaoImplTest {
         prepareDataForAssigning();
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor = new Professor(1, "Alan", "Smith");
-        professorDao.save(professor);
+        saveProfessor(professor);
 
-        assertDoesNotThrow(() -> professorDao.assignProfessorToCourse(1, COURSE_ID));
+        professorDao.assignProfessorToCourse(1, COURSE_ID);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professor_course");
+
+        assertTrue(result.next());
+        assertEquals(professor.getId(), result.getInt("professor_id"));
+        assertEquals(COURSE_ID, result.getInt("course_id"));
     }
 
     @Test
@@ -129,10 +146,10 @@ class ProfessorDaoImplTest {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor1 = new Professor(1, "Alan", "Smith");
         Professor professor2 = new Professor(2, "John", "Walker");
-        professorDao.save(professor1);
-        professorDao.save(professor2);
-        professorDao.assignProfessorToCourse(1, COURSE_ID);
-        professorDao.assignProfessorToCourse(2, COURSE_ID);
+        saveProfessor(professor1);
+        saveProfessor(professor2);
+        assignProfessorToCourse(professor1.getId(), COURSE_ID);
+        assignProfessorToCourse(professor2.getId(), COURSE_ID);
 
         List<Professor> result = professorDao.findProfessorsForCourse(COURSE_ID);
 

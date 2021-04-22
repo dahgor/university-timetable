@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AuditoryDaoTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/auditoryDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/auditoryDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -35,6 +35,11 @@ class AuditoryDaoTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
+    }
+
+    void saveAuditory(Auditory auditory) {
+        jdbcTemplate.update("insert into auditories(auditory_location) VALUES (?)",
+                auditory.getLocation());
     }
 
     @Test
@@ -74,23 +79,23 @@ class AuditoryDaoTest {
         Auditory auditory = new Auditory(1, "1st floor");
         auditoryDao.save(auditory);
 
-        Auditory result = auditoryDao.findById(1);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from auditories");
 
-        assertEquals(auditory, result);
+        assertTrue(result.next());
+        assertEquals(auditory.getId(), result.getInt("auditory_id"));
+        assertEquals(auditory.getLocation(), result.getString("auditory_location"));
     }
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
         Auditory auditory = new Auditory(1, "1st floor");
-        auditoryDao.save(auditory);
-        List<Auditory> itemsFromDb = auditoryDao.findAllRecords();
-        assertEquals(1, itemsFromDb.size());
+        saveAuditory(auditory);
 
         auditoryDao.deleteById(1);
-        itemsFromDb = auditoryDao.findAllRecords();
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from auditories");
 
-        assertEquals(0, itemsFromDb.size());
+        assertFalse(result.next());
     }
 
     @Test
@@ -98,8 +103,8 @@ class AuditoryDaoTest {
         AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
         Auditory auditory1 = new Auditory(1, "1st floor");
         Auditory auditory2 = new Auditory(2, "Next to WC on the 3rd floor");
-        auditoryDao.save(auditory1);
-        auditoryDao.save(auditory2);
+        saveAuditory(auditory1);
+        saveAuditory(auditory2);
 
         List<Auditory> itemsFromDb = auditoryDao.findAllRecords();
 

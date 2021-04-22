@@ -18,11 +18,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GroupDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/groupDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/groupDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -35,6 +35,11 @@ class GroupDaoImplTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
+    }
+
+    void saveGroup(Group group) {
+        jdbcTemplate.update("insert into groups(group_name) values (?)",
+                group.getName());
     }
 
     @Test
@@ -72,24 +77,25 @@ class GroupDaoImplTest {
     void shouldReturnSameGroupFromDbWhenSaved() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
-        groupDao.save(group);
-        Group result = groupDao.findById(1);
 
-        assertEquals(group, result);
+        groupDao.save(group);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from groups");
+
+        assertTrue(result.next());
+        assertEquals(group.getId(), result.getInt("group_id"));
+        assertEquals(group.getName(), result.getString("group_name"));
     }
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
-        groupDao.save(group);
-        List<Group> itemsFromDb = groupDao.findAllRecords();
-        assertEquals(1, itemsFromDb.size());
+        saveGroup(group);
 
         groupDao.deleteById(1);
-        itemsFromDb = groupDao.findAllRecords();
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from groups");
 
-        assertEquals(0, itemsFromDb.size());
+        assertFalse(result.next());
     }
 
     @Test
@@ -97,8 +103,8 @@ class GroupDaoImplTest {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group1 = new Group(1, "ME-15");
         Group group2 = new Group(2, "ME-16");
-        groupDao.save(group1);
-        groupDao.save(group2);
+        saveGroup(group1);
+        saveGroup(group2);
 
         List<Group> itemsFromDb = groupDao.findAllRecords();
 
@@ -111,10 +117,10 @@ class GroupDaoImplTest {
     void shouldAssignGroupToCourse() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
-        groupDao.save(group);
+        saveGroup(group);
         jdbcTemplate.execute("insert into courses(course_name, course_description) VALUES ('Math', 'description')");
-        groupDao.assignGroupToCourse(1, 1);
 
+        groupDao.assignGroupToCourse(1, 1);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from group_course");
 
         assertTrue(result.next());

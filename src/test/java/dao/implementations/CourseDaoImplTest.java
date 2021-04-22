@@ -8,21 +8,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CourseDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/courseDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/courseDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
+    private static final int PROFESSOR_ID = 1;
+    private static final int GROUP_ID = 1;
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -35,6 +37,30 @@ class CourseDaoImplTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
+    }
+
+    void saveCourse(Course course) {
+        jdbcTemplate.update("insert into courses(course_name, course_description) values(?, ?)",
+                course.getName(), course.getDescription());
+    }
+
+    void createProfessor(String firstName, String lastName) {
+        jdbcTemplate.update("insert into professors(first_name, last_name) values (?, ?)",
+                firstName, lastName);
+    }
+
+    void assignProfessorToCourse(int professorId, int courseId) {
+        jdbcTemplate.update("insert into professor_course(professor_id, course_id) values (?, ?)",
+                professorId, courseId);
+    }
+
+    void createGroup(String groupName) {
+        jdbcTemplate.update("insert into groups(group_name) values (?)", groupName);
+    }
+
+    void assignGroupToCourse(int groupId, int courseId) {
+        jdbcTemplate.update("insert into group_course(group_id, course_id) values (?, ?)",
+                groupId, courseId);
     }
 
     @Test
@@ -73,23 +99,25 @@ class CourseDaoImplTest {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");
         courseDao.save(course);
-        Course result = courseDao.findById(1);
 
-        assertEquals(course, result);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from courses");
+
+        assertTrue(result.next());
+        assertEquals(course.getId(), result.getInt("course_id"));
+        assertEquals(course.getName(), result.getString("course_name"));
+        assertEquals(course.getDescription(), result.getString("course_description"));
     }
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");
-        courseDao.save(course);
-        List<Course> itemsFromDb = courseDao.findAllRecords();
-        assertEquals(1, itemsFromDb.size());
+        saveCourse(course);
 
         courseDao.deleteById(1);
-        itemsFromDb = courseDao.findAllRecords();
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from courses");
 
-        assertEquals(0, itemsFromDb.size());
+        assertFalse(result.next());
     }
 
     @Test
@@ -97,8 +125,8 @@ class CourseDaoImplTest {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course1 = new Course(1, "Math", "description");
         Course course2 = new Course(2, "Biology", "description");
-        courseDao.save(course1);
-        courseDao.save(course2);
+        saveCourse(course1);
+        saveCourse(course2);
 
         List<Course> itemsFromDb = courseDao.findAllRecords();
 
@@ -111,9 +139,9 @@ class CourseDaoImplTest {
     void shouldReturnCorrectCourseForProfessor() throws DaoException {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");
-        courseDao.save(course);
-        jdbcTemplate.update("insert into professors(first_name, last_name) values ('Alan', 'Smith')");
-        jdbcTemplate.update("insert into professor_course(professor_id, course_id) values (1, 1)");
+        saveCourse(course);
+        createProfessor("Alan", "Smith");
+        assignProfessorToCourse(PROFESSOR_ID, course.getId());
 
         List<Course> result = courseDao.findCoursesForProfessor(1);
 
@@ -125,9 +153,9 @@ class CourseDaoImplTest {
     void shouldReturnCorrectCourseForGroup() throws DaoException {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");
-        courseDao.save(course);
-        jdbcTemplate.update("insert into groups(group_name) values ('ME-15')");
-        jdbcTemplate.update("insert into group_course(group_id, course_id) values (1, 1)");
+        saveCourse(course);
+        createGroup("ME-15");
+        assignGroupToCourse(GROUP_ID, course.getId());
 
         List<Course> result = courseDao.findCoursesForGroup(1);
 

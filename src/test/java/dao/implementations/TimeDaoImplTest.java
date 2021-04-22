@@ -22,13 +22,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimeDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/timeDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id passed";
-    public static final int INVALID_ID = -1;
-    public static final int TIME_PERIOD_ID = 1;
-    public static final int LESSON_ID = 1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/timeDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id passed";
+    private static final int INVALID_ID = -1;
+    private static final int TIME_PERIOD_ID = 1;
+    private static final int LESSON_ID = 1;
     private static final Date DATE = Date.valueOf(LocalDate.now());
     private static final Date DATE_2 = Date.valueOf(LocalDate.of(2021, 4, 15));
     private static final Timestamp TIMESTAMP = Timestamp.valueOf(LocalDateTime.now());
@@ -47,6 +47,11 @@ class TimeDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
+    void saveTime(Time time) {
+        jdbcTemplate.update("insert into times(date, time_period_id) values (?, ?)",
+                time.getDate(), time.getTimePeriodId());
+    }
+
     void createTimePeriod() {
         jdbcTemplate.update("insert into time_periods(start_hour, end_hour) " +
                 "VALUES (?, ?)", TIMESTAMP, TIMESTAMP);
@@ -63,8 +68,9 @@ class TimeDaoImplTest {
                 "VALUES (1, 1, 1, 1)");
     }
 
-    void assignLessonToTimeWithId1() {
-        jdbcTemplate.execute("insert into schedule(time_id, lesson_id) VALUES (1, 1)");
+    void assignLessonToTime(int lessonId, int timeId) {
+        jdbcTemplate.update("insert into schedule(time_id, lesson_id) VALUES (?, ?)",
+                timeId, lessonId);
     }
 
     @Test
@@ -99,15 +105,18 @@ class TimeDaoImplTest {
     }
 
     @Test
-    void shouldReturnSameAuditoryFromDbWhenSaved() throws DaoException {
+    void shouldReturnSameTimeFromDbWhenSaved() throws DaoException {
         createTimePeriod();
         TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);
         Time time = new Time(1, DATE, TIME_PERIOD_ID);
         timeDao.save(time);
 
-        Time result = timeDao.findById(1);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from times");
 
-        assertEquals(time, result);
+        assertTrue(result.next());
+        assertEquals(time.getId(), result.getInt("time_id"));
+        assertEquals(time.getDate(), result.getDate("date"));
+        assertEquals(time.getTimePeriodId(), result.getInt("time_period_id"));
     }
 
     @Test
@@ -115,7 +124,7 @@ class TimeDaoImplTest {
         createTimePeriod();
         TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);
         Time time = new Time(1, DATE, TIME_PERIOD_ID);
-        timeDao.save(time);
+        saveTime(time);
 
         timeDao.deleteById(1);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from times");
@@ -129,8 +138,8 @@ class TimeDaoImplTest {
         TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);
         Time time1 = new Time(1, DATE, TIME_PERIOD_ID);
         Time time2 = new Time(2, DATE_2, TIME_PERIOD_ID);
-        timeDao.save(time1);
-        timeDao.save(time2);
+        saveTime(time1);
+        saveTime(time2);
 
         List<Time> itemsFromDb = timeDao.findAllRecords();
 
@@ -145,8 +154,8 @@ class TimeDaoImplTest {
         createLesson();
         TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);
         Time time = new Time(1, DATE, TIME_PERIOD_ID);
-        timeDao.save(time);
-        assignLessonToTimeWithId1();
+        saveTime(time);
+        assignLessonToTime(LESSON_ID, time.getId());
 
         Time result = timeDao.findScheduledTimeForLesson(LESSON_ID);
 

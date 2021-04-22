@@ -22,18 +22,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimePeriodDaoTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/timePeriodDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id is passed";
-    public static final int INVALID_ID = -1;
-    public static final Timestamp START = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/timePeriodDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id is passed";
+    private static final int INVALID_ID = -1;
+    private static final Timestamp START = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
             LocalTime.of(10, 0)));
-    public static final Timestamp END = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
+    private static final Timestamp END = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
             LocalTime.of(12, 0)));
-    public static final Timestamp START_2 = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
+    private static final Timestamp START_2 = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
             LocalTime.of(12, 0)));
-    public static final Timestamp END_2 = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
+    private static final Timestamp END_2 = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(),
             LocalTime.of(14, 0)));
 
     private JdbcTemplate jdbcTemplate;
@@ -47,6 +47,11 @@ class TimePeriodDaoTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         FileInputStream file = new FileInputStream(PROPERTIES);
         daoProperties = new DaoProperties(file);
+    }
+
+    void saveTimePeriod(TimePeriod timePeriod) {
+        jdbcTemplate.update("insert into time_periods(start_hour, end_hour) values (?, ?)",
+                timePeriod.getStartHour(), timePeriod.getEndHour());
     }
 
     @Test
@@ -95,7 +100,7 @@ class TimePeriodDaoTest {
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
         TimePeriod timePeriod = new TimePeriod(1, START, END);
-        timePeriodDao.save(timePeriod);
+        saveTimePeriod(timePeriod);
 
         timePeriodDao.deleteById(1);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from time_periods");
@@ -108,8 +113,8 @@ class TimePeriodDaoTest {
         TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
         TimePeriod timePeriod1 = new TimePeriod(1, START, END);
         TimePeriod timePeriod2 = new TimePeriod(2, START_2, END_2);
-        timePeriodDao.save(timePeriod1);
-        timePeriodDao.save(timePeriod2);
+        saveTimePeriod(timePeriod1);
+        saveTimePeriod(timePeriod2);
 
         List<TimePeriod> itemsFromDb = timePeriodDao.findAllRecords();
 

@@ -18,12 +18,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentDaoImplTest {
-    public static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
-    public static final String PROPERTIES = "./src/test/resources/daoProperties/studentDao.properties";
-    public static final String NULL_ERROR = "Null is passed";
-    public static final String ID_ERROR = "Invalid id is passed";
-    public static final int INVALID_ID = -1;
-    public static final int GROUP_ID = 1;
+    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
+    private static final String PROPERTIES = "./src/test/resources/daoProperties/studentDao.properties";
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id is passed";
+    private static final int INVALID_ID = -1;
+    private static final int GROUP_ID = 1;
 
     private JdbcTemplate jdbcTemplate;
     private DaoProperties daoProperties;
@@ -40,6 +40,11 @@ class StudentDaoImplTest {
 
     void prepareGroup() {
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
+    }
+
+    void saveStudent(Student student) {
+        jdbcTemplate.update("insert into students(group_id, first_name, last_name) values (?, ?, ?)",
+                student.getGroupId(), student.getFirstName(), student.getLastName());
     }
 
     @Test
@@ -78,11 +83,15 @@ class StudentDaoImplTest {
         prepareGroup();
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
         Student student = new Student(1, GROUP_ID, "Mike", "Chelsey");
+
         studentDao.save(student);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from students");
 
-        Student result = studentDao.findById(1);
-
-        assertEquals(student, result);
+        assertTrue(result.next());
+        assertEquals(student.getId(), result.getInt("student_id"));
+        assertEquals(student.getFirstName(), result.getString("first_name"));
+        assertEquals(student.getLastName(), result.getString("last_name"));
+        assertEquals(student.getGroupId(), result.getInt("group_id"));
     }
 
     @Test
@@ -90,7 +99,7 @@ class StudentDaoImplTest {
         prepareGroup();
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
         Student student = new Student(1, GROUP_ID, "Mike", "Chelsey");
-        studentDao.save(student);
+        saveStudent(student);
 
         studentDao.deleteById(1);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from students");
@@ -104,8 +113,8 @@ class StudentDaoImplTest {
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
         Student student1 = new Student(1, GROUP_ID, "Mike", "Chelsey");
         Student student2 = new Student(2, GROUP_ID, "Chen", "McFoos");
-        studentDao.save(student1);
-        studentDao.save(student2);
+        saveStudent(student1);
+        saveStudent(student2);
 
         List<Student> itemsFromDb = studentDao.findAllRecords();
 
@@ -120,8 +129,8 @@ class StudentDaoImplTest {
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
         Student student1 = new Student(1, GROUP_ID, "Mike", "Chelsey");
         Student student2 = new Student(2, GROUP_ID, "Chen", "McFoos");
-        studentDao.save(student1);
-        studentDao.save(student2);
+        saveStudent(student1);
+        saveStudent(student2);
 
         List<Student> itemsFromDb = studentDao.findStudentsInGroup(GROUP_ID);
 
