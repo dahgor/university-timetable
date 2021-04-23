@@ -3,24 +3,32 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Auditory;
-import dao.mappers.AuditoryMapper;
 import dao.interfaces.Dao;
+import dao.mappers.AuditoryMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("auditoryDao")
 public class AuditoryDao implements Dao<Auditory> {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("auditoryProperties")
     private DaoProperties queries;
 
     public AuditoryDao() {
     }
 
     public AuditoryDao(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
-        if (jdbc == null || queries == null){
+        if (jdbc == null || queries == null) {
             throw new DaoException(NULL_ERROR);
         }
         this.jdbc = jdbc;

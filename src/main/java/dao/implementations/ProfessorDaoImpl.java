@@ -5,15 +5,23 @@ import dao.DaoProperties;
 import dao.entities.Professor;
 import dao.interfaces.ProfessorDao;
 import dao.mappers.ProfessorMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("professorDao")
 public class ProfessorDaoImpl implements ProfessorDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("professorProperties")
     private DaoProperties queries;
 
     public ProfessorDaoImpl() {

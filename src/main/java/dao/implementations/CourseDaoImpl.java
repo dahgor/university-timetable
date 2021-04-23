@@ -3,17 +3,25 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Course;
-import dao.mappers.CourseMapper;
 import dao.interfaces.CourseDao;
+import dao.mappers.CourseMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("courseDao")
 public class CourseDaoImpl implements CourseDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("courseProperties")
     private DaoProperties queries;
 
     public CourseDaoImpl() {

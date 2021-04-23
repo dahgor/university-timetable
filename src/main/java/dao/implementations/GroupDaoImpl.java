@@ -3,17 +3,25 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Group;
-import dao.mappers.GroupMapper;
 import dao.interfaces.GroupDao;
+import dao.mappers.GroupMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("groupDao")
 public class GroupDaoImpl implements GroupDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("groupProperties")
     private DaoProperties queries;
 
     public GroupDaoImpl() {

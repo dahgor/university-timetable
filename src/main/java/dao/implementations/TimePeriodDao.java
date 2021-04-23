@@ -5,15 +5,23 @@ import dao.DaoProperties;
 import dao.entities.TimePeriod;
 import dao.interfaces.Dao;
 import dao.mappers.TimePeriodMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("timePeriodDao")
 public class TimePeriodDao implements Dao<TimePeriod> {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id is passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("timePeriodProperties")
     private DaoProperties queries;
 
     public TimePeriodDao() {

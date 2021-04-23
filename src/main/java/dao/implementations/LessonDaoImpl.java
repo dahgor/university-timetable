@@ -3,25 +3,33 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Lesson;
-import dao.mappers.LessonMapper;
 import dao.interfaces.LessonDao;
+import dao.mappers.LessonMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.util.List;
 
+@Component("lessonDao")
 public class LessonDaoImpl implements LessonDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
+    @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier("lessonProperties")
     private DaoProperties queries;
 
     public LessonDaoImpl() {
     }
 
     public LessonDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
-        if (jdbc == null || queries == null){
+        if (jdbc == null || queries == null) {
             throw new DaoException(NULL_ERROR);
         }
         this.jdbc = jdbc;
