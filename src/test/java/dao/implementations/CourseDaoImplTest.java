@@ -109,6 +109,19 @@ class CourseDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+        Course course1 = new Course(1, "Math", "description");
+        Course course2 = new Course(2, "Biology", "description");
+
+        int generatedId1 = courseDao.save(course1);
+        int generatedId2 = courseDao.save(course2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");

@@ -8,8 +8,11 @@ import dao.mappers.TimePeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("timePeriodDao")
@@ -44,12 +47,21 @@ public class TimePeriodDao implements Dao<TimePeriod> {
     }
 
     @Override
-    public void save(TimePeriod timePeriod) throws DaoException {
+    public int save(TimePeriod timePeriod) throws DaoException {
         if (timePeriod == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), timePeriod.getStartHour(),
-                timePeriod.getEndHour());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"time_period_id"});
+            ps.setTimestamp(1, timePeriod.getStartHour());
+            ps.setTimestamp(2, timePeriod.getEndHour());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

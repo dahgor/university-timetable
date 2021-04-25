@@ -8,8 +8,11 @@ import dao.mappers.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("studentDao")
@@ -44,12 +47,22 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void save(Student student) throws DaoException {
+    public int save(Student student) throws DaoException {
         if (student == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), student.getFirstName(), student.getLastName(),
-                student.getGroupId());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"student_id"});
+            ps.setString(1, student.getFirstName());
+            ps.setString(2, student.getLastName());
+            ps.setInt(3, student.getGroupId());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

@@ -8,8 +8,11 @@ import dao.mappers.GroupMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("groupDao")
@@ -44,11 +47,20 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void save(Group group) throws DaoException {
+    public int save(Group group) throws DaoException {
         if (group == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), group.getName());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"group_id"});
+            ps.setString(1, group.getName());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

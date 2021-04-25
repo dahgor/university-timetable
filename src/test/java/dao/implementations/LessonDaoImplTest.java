@@ -230,6 +230,20 @@ class LessonDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        prepareDataForTwoLessons();
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+        Lesson lesson1 = new Lesson(1, 1, 1, 1, 1);
+        Lesson lesson2 = new Lesson(2, 2, 2, 2, 2);
+
+        int generatedId1 = lessonDao.save(lesson1);
+        int generatedId2 = lessonDao.save(lesson2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         prepareDataForOneLesson();
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);

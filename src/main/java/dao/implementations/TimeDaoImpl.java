@@ -8,8 +8,11 @@ import dao.mappers.TimeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("timeDao")
@@ -44,11 +47,21 @@ public class TimeDaoImpl implements TimeDao {
     }
 
     @Override
-    public void save(Time time) throws DaoException {
+    public int save(Time time) throws DaoException {
         if (time == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), time.getDate(), time.getTimePeriodId());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"time_id"});
+            ps.setDate(1, time.getDate());
+            ps.setInt(2, time.getTimePeriodId());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

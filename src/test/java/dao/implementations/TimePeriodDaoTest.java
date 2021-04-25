@@ -97,6 +97,19 @@ class TimePeriodDaoTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriod timePeriod1 = new TimePeriod(1, START, END);
+        TimePeriod timePeriod2 = new TimePeriod(2, START_2, END_2);
+
+        int generatedId1 = timePeriodDao.save(timePeriod1);
+        int generatedId2 = timePeriodDao.save(timePeriod2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
         TimePeriod timePeriod = new TimePeriod(1, START, END);

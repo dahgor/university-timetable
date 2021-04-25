@@ -99,6 +99,19 @@ class ProfessorDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+        Professor professor1 = new Professor(1, "Alan", "Smith");
+        Professor professor2 = new Professor(2, "John", "Walker");
+
+        int generatedId1 = professorDao.save(professor1);
+        int generatedId2 = professorDao.save(professor2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
         Professor professor = new Professor(1, "Alan", "Smith");

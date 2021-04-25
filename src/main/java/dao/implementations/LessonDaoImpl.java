@@ -8,9 +8,12 @@ import dao.mappers.LessonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("lessonDao")
@@ -45,13 +48,23 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public void save(Lesson lesson) throws DaoException {
+    public int save(Lesson lesson) throws DaoException {
         if (lesson == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), lesson.getCourseId(),
-                lesson.getProfessorId(), lesson.getGroupId(),
-                lesson.getAuditoryId());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"lesson_id"});
+            ps.setInt(1, lesson.getCourseId());
+            ps.setInt(2, lesson.getProfessorId());
+            ps.setInt(3, lesson.getGroupId());
+            ps.setInt(4, lesson.getAuditoryId());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

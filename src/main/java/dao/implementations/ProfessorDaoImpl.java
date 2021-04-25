@@ -8,8 +8,11 @@ import dao.mappers.ProfessorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("professorDao")
@@ -44,12 +47,21 @@ public class ProfessorDaoImpl implements ProfessorDao {
     }
 
     @Override
-    public void save(Professor professor) throws DaoException {
+    public int save(Professor professor) throws DaoException {
         if (professor == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"),
-                professor.getFirstName(), professor.getLastName());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"professor_id"});
+            ps.setString(1, professor.getFirstName());
+            ps.setString(2, professor.getLastName());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

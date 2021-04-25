@@ -95,6 +95,20 @@ class StudentDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        prepareGroup();
+        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+        Student student1 = new Student(1, GROUP_ID, "Mike", "Chelsey");
+        Student student2 = new Student(2, GROUP_ID, "Chen", "McFoos");
+
+        int generatedId1 = studentDao.save(student1);
+        int generatedId2 = studentDao.save(student2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         prepareGroup();
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);

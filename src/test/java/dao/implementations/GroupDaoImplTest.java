@@ -87,6 +87,19 @@ class GroupDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+        Group group1 = new Group(1, "ME-15");
+        Group group2 = new Group(2, "ME-16");
+
+        int generatedId1 = groupDao.save(group1);
+        int generatedId2 = groupDao.save(group2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");

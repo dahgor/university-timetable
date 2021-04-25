@@ -8,8 +8,11 @@ import dao.mappers.AuditoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("auditoryDao")
@@ -44,11 +47,20 @@ public class AuditoryDao implements Dao<Auditory> {
     }
 
     @Override
-    public void save(Auditory auditory) throws DaoException {
+    public int save(Auditory auditory) throws DaoException {
         if (auditory == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), auditory.getLocation());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"auditory_id"});
+            ps.setString(1, auditory.getLocation());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

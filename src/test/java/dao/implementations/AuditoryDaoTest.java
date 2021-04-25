@@ -87,6 +87,19 @@ class AuditoryDaoTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        Auditory auditory1 = new Auditory(1, "1st floor");
+        Auditory auditory2 = new Auditory(2, "Next to WC on the 3rd floor");
+
+        int generatedId1 = auditoryDao.save(auditory1);
+        int generatedId2 = auditoryDao.save(auditory2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
         Auditory auditory = new Auditory(1, "1st floor");

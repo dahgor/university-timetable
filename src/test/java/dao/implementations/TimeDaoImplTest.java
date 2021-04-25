@@ -120,6 +120,20 @@ class TimeDaoImplTest {
     }
 
     @Test
+    void shouldReturnCorrectIdWhenSaved() throws DaoException {
+        createTimePeriod();
+        TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);
+        Time time1 = new Time(1, DATE, TIME_PERIOD_ID);
+        Time time2 = new Time(2, DATE_2, TIME_PERIOD_ID);
+
+        int generatedId1 = timeDao.save(time1);
+        int generatedId2 = timeDao.save(time2);
+
+        assertEquals(1, generatedId1);
+        assertEquals(2, generatedId2);
+    }
+
+    @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
         createTimePeriod();
         TimeDaoImpl timeDao = new TimeDaoImpl(jdbcTemplate, daoProperties);

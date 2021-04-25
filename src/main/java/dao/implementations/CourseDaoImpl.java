@@ -8,8 +8,11 @@ import dao.mappers.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("courseDao")
@@ -44,11 +47,21 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void save(Course course) throws DaoException {
+    public int save(Course course) throws DaoException {
         if (course == null) {
             throw new DaoException(NULL_ERROR);
         }
-        jdbc.update(queries.getQuery("save"), course.getName(), course.getDescription());
+        final String query = queries.getQuery("save");
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"course_id"});
+            ps.setString(1, course.getName());
+            ps.setString(2, course.getDescription());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override
