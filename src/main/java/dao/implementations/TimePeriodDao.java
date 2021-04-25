@@ -20,11 +20,7 @@ public class TimePeriodDao implements Dao<TimePeriod> {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id is passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("timePeriodProperties")
     private DaoProperties queries;
 
     public TimePeriodDao() {
@@ -38,10 +34,13 @@ public class TimePeriodDao implements Dao<TimePeriod> {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
+    @Autowired
+    @Qualifier("timePeriodProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }

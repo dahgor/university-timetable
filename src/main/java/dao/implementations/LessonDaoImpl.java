@@ -21,11 +21,7 @@ public class LessonDaoImpl implements LessonDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("lessonProperties")
     private DaoProperties queries;
 
     public LessonDaoImpl() {
@@ -39,10 +35,13 @@ public class LessonDaoImpl implements LessonDao {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
+    @Autowired
+    @Qualifier("lessonProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }

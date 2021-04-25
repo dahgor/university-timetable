@@ -20,11 +20,7 @@ public class AuditoryDao implements Dao<Auditory> {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("auditoryProperties")
     private DaoProperties queries;
 
     public AuditoryDao() {
@@ -38,10 +34,13 @@ public class AuditoryDao implements Dao<Auditory> {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
+    @Autowired
+    @Qualifier("auditoryProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }

@@ -20,11 +20,7 @@ public class TimeDaoImpl implements TimeDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("timeProperties")
     private DaoProperties queries;
 
     public TimeDaoImpl() {
@@ -38,10 +34,13 @@ public class TimeDaoImpl implements TimeDao {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
+    @Autowired
+    @Qualifier("timeProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }

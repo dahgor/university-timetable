@@ -20,11 +20,7 @@ public class GroupDaoImpl implements GroupDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("groupProperties")
     private DaoProperties queries;
 
     public GroupDaoImpl() {
@@ -38,10 +34,13 @@ public class GroupDaoImpl implements GroupDao {
         this.queries = properties;
     }
 
+    @Autowired
+    @Qualifier("groupProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }

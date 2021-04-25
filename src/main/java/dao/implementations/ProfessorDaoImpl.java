@@ -20,11 +20,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
-    @Autowired
     private JdbcTemplate jdbc;
-
-    @Autowired
-    @Qualifier("professorProperties")
     private DaoProperties queries;
 
     public ProfessorDaoImpl() {
@@ -38,10 +34,13 @@ public class ProfessorDaoImpl implements ProfessorDao {
         this.queries = queries;
     }
 
+    @Autowired
     public void setJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
+    @Autowired
+    @Qualifier("professorProperties")
     public void setQueries(DaoProperties queries) {
         this.queries = queries;
     }
