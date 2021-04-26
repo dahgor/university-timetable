@@ -16,14 +16,46 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuditoryServiceTest {
+    private static final String NULL_ERROR = "Null is passed";
+    private static final String ID_ERROR = "Invalid id is passed";
+    private static int INVALID_ID = -1;
 
     @Mock
     private AuditoryDao auditoryDao;
+
+    @Test
+    void shouldThrowServiceExceptionWhenNullIsPassedToConstructor() {
+        Exception exception = assertThrows(ServiceException.class,
+                () -> new AuditoryService(null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowServiceExceptionWhenNullIsPassedToSaveMethod() {
+        Exception exception = assertThrows(ServiceException.class,
+                () -> new AuditoryService(auditoryDao).save(null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowServiceExceptionWhenNullIsPassedToFindByIdMethod() {
+        Exception exception = assertThrows(ServiceException.class,
+                () -> new AuditoryService(auditoryDao).findById(INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowServiceExceptionWhenNullIsPassedToDeleteByIdMethod() {
+        Exception exception = assertThrows(ServiceException.class,
+                () -> new AuditoryService(auditoryDao).deleteById(INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
 
     @Test
     void shouldReturnCorrectModelWhenSaved() throws ServiceException, DaoException {
