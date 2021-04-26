@@ -1,14 +1,26 @@
-package domain.models;
+package services.models;
 
-public class Auditory {
+public class AuditoryModel {
+    public static final String EMPTY_LOCATION = "";
+    public static final int EMPTY_ID = 0;
 
     private int id;
     private String location;
 
-    public Auditory() {
+    public AuditoryModel() {
     }
 
-    public Auditory(int id, String location) {
+    public AuditoryModel(int id) {
+        this.id = id;
+        this.location = EMPTY_LOCATION;
+    }
+
+    public AuditoryModel(String location) {
+        this.id = EMPTY_ID;
+        this.location = location;
+    }
+
+    public AuditoryModel(int id, String location) {
         this.id = id;
         this.location = location;
     }
@@ -46,7 +58,7 @@ public class Auditory {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Auditory other = (Auditory) obj;
+        AuditoryModel other = (AuditoryModel) obj;
         if (id != other.id)
             return false;
         if (location == null) {
