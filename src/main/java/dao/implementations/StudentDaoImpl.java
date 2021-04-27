@@ -87,6 +87,24 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
+    public void changeGroup(int studentId, int groupId) throws DaoException {
+        if (studentId <= 0 || groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeGroup"), groupId, studentId);
+    }
+
+    @Override
+    public void changeFirstName(int studentId, String newFirstName) throws DaoException {
+
+    }
+
+    @Override
+    public void changeLastName(int studentId, String newLastName) throws DaoException {
+
+    }
+
+    @Override
     public List<Student> findStudentsInGroup(int groupId) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);

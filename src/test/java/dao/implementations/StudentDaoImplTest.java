@@ -3,6 +3,7 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Student;
+import dao.interfaces.StudentDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +43,11 @@ class StudentDaoImplTest {
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
     }
 
+    void prepareTwoGroups() {
+        jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
+        jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-16')");
+    }
+
     void saveStudent(Student student) {
         jdbcTemplate.update("insert into students(group_id, first_name, last_name) values (?, ?, ?)",
                 student.getGroupId(), student.getFirstName(), student.getLastName());
@@ -75,6 +81,15 @@ class StudentDaoImplTest {
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> studentDao.findById(INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeGroupMethod() throws DaoException {
+        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> studentDao.changeGroup(INVALID_ID, INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -151,6 +166,21 @@ class StudentDaoImplTest {
         assertEquals(2, itemsFromDb.size());
         assertEquals(student1, itemsFromDb.get(0));
         assertEquals(student2, itemsFromDb.get(1));
+    }
+
+    @Test
+    void shouldChangeGroupWhenValidIdsArePassed() throws DaoException {
+        prepareTwoGroups();
+        StudentDao studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+        Student student = new Student(1, 1, "Mike", "Chelsey");
+        saveStudent(student);
+
+        studentDao.changeGroup(1, 2);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(
+                "select * from students where student_id = 1");
+
+        assertTrue(result.next());
+        assertEquals(2, result.getInt("group_id"));
     }
 
 }
