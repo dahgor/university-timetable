@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import services.ServiceException;
-import services.models.AuditoryModel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,9 +61,9 @@ class AuditoryServiceTest {
         InOrder calls = inOrder(auditoryDao);
         when(auditoryDao.save(any())).thenReturn(1);
         AuditoryService auditoryService = new AuditoryService(auditoryDao);
-        AuditoryModel auditory = new AuditoryModel("1st floor");
+        Auditory auditory = new Auditory(0, "1st floor");
 
-        AuditoryModel result = auditoryService.save(auditory);
+        Auditory result = auditoryService.save(auditory);
 
         verify(auditoryDao).save(any());
         assertEquals(1, result.getId());
@@ -75,7 +74,7 @@ class AuditoryServiceTest {
     void shouldDeleteItemWhenIdPassed() throws ServiceException, DaoException {
         InOrder calls = Mockito.inOrder(auditoryDao);
         AuditoryService auditoryService = new AuditoryService(auditoryDao);
-        AuditoryModel auditory = new AuditoryModel(1, "1st floor");
+        Auditory auditory = new Auditory(1, "1st floor");
 
         auditoryService.deleteById(auditory.getId());
 
@@ -89,7 +88,7 @@ class AuditoryServiceTest {
         when(auditoryDao.findById(1)).thenReturn(auditoryEntity);
         AuditoryService auditoryService = new AuditoryService(auditoryDao);
 
-        AuditoryModel result = auditoryService.findById(auditoryEntity.getId());
+        Auditory result = auditoryService.findById(auditoryEntity.getId());
 
         calls.verify(auditoryDao).findById(1);
         assertEquals(auditoryEntity.getId(), result.getId());
@@ -105,7 +104,7 @@ class AuditoryServiceTest {
         InOrder calls = inOrder(auditoryDao);
         AuditoryService auditoryService = new AuditoryService(auditoryDao);
 
-        List<AuditoryModel> result = auditoryService.getAllItems();
+        List<Auditory> result = auditoryService.getAllItems();
 
         verify(auditoryDao).findAllRecords();
         assertEquals(1, result.size());
