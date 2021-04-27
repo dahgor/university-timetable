@@ -59,7 +59,11 @@ public class GroupDaoImpl implements GroupDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        try {
+            return keyHolder.getKey().intValue();
+        } catch (NullPointerException exception) {
+            throw new DaoException("Null is passed as an id from database");
+        }
     }
 
     @Override
