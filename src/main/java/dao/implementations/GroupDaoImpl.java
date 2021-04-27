@@ -114,4 +114,12 @@ public class GroupDaoImpl implements GroupDao {
         }
         jdbc.update(queries.getQuery("deleteGroupFromCourse"), groupId, courseId);
     }
+
+    @Override
+    public List<Group> findByCourse(int courseId) throws DaoException {
+        if (courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findByCourse"), new Object[]{courseId}, new GroupMapper());
+    }
 }

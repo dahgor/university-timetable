@@ -107,6 +107,15 @@ class GroupDaoImplTest {
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByCourseMethod() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> groupDao.findByCourse(INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameGroupFromDbWhenSaved() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
@@ -200,6 +209,24 @@ class GroupDaoImplTest {
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from group_course");
 
         assertFalse(result.next());
+    }
+
+    @Test
+    void shouldFindGroupsByCourseWhenValidArgIsPassed() throws DaoException {
+        prepareOneCourse();
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+        Group group1 = new Group(1, "ME-15");
+        Group group2 = new Group(2, "ME-16");
+        saveGroup(group1);
+        saveGroup(group2);
+        assignGroupToCourse(group1.getId(), 1);
+        assignGroupToCourse(group2.getId(), 1);
+
+        List<Group> itemsFromDb = groupDao.findByCourse(1);
+
+        assertEquals(2, itemsFromDb.size());
+        assertEquals(group1, itemsFromDb.get(0));
+        assertEquals(group2, itemsFromDb.get(1));
     }
 
 }
