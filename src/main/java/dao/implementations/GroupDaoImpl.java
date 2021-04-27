@@ -109,6 +109,9 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public void deleteGroupFromCourse(int groupId, int courseId) throws DaoException {
-
+        if (groupId <= 0 || courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("deleteGroupFromCourse"), groupId, courseId);
     }
 }

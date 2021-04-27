@@ -42,6 +42,14 @@ class GroupDaoImplTest {
                 group.getName());
     }
 
+    void prepareOneCourse() {
+        jdbcTemplate.execute("insert into courses(course_name, course_description) VALUES ('Math', 'description')");
+    }
+
+    void assignGroupToCourse(int groupId, int courseId) {
+        jdbcTemplate.update("insert into group_course(group_id, course_id) values (?, ?)", groupId, courseId);
+    }
+
     @Test
     void shouldThrowDaoExceptionWhenNullIsPassedToConstructor() {
         Exception exception = assertThrows(DaoException.class, () -> new GroupDaoImpl(null,
@@ -87,6 +95,15 @@ class GroupDaoImplTest {
 
         Exception exception = assertThrows(DaoException.class, () -> groupDao.changeName(1, null));
         assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToDeleteGroupFromCourseMethod() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> groupDao.deleteGroupFromCourse(INVALID_ID, 1));
+        assertEquals(ID_ERROR, exception.getMessage());
     }
 
     @Test
@@ -161,7 +178,7 @@ class GroupDaoImplTest {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
         saveGroup(group);
-        jdbcTemplate.execute("insert into courses(course_name, course_description) VALUES ('Math', 'description')");
+        prepareOneCourse();
 
         groupDao.assignGroupToCourse(1, 1);
         SqlRowSet result = jdbcTemplate.queryForRowSet("select * from group_course");
@@ -169,6 +186,20 @@ class GroupDaoImplTest {
         assertTrue(result.next());
         assertEquals(1, result.getInt("group_id"));
         assertEquals(1, result.getInt("course_id"));
+    }
+
+    @Test
+    void shouldDeleteGroupFromCourse() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+        Group group = new Group(1, "ME-15");
+        saveGroup(group);
+        prepareOneCourse();
+        assignGroupToCourse(group.getId(), 1);
+
+        groupDao.deleteGroupFromCourse(group.getId(), 1);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from group_course");
+
+        assertFalse(result.next());
     }
 
 }
