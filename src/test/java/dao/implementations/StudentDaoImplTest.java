@@ -94,6 +94,24 @@ class StudentDaoImplTest {
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeFirstNameMethod() throws DaoException {
+        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> studentDao.changeFirstName(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeFirstNameMethod() throws DaoException {
+        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> studentDao.changeFirstName(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameStudentFromDbWhenSaved() throws DaoException {
         prepareGroup();
         StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
@@ -181,6 +199,22 @@ class StudentDaoImplTest {
 
         assertTrue(result.next());
         assertEquals(2, result.getInt("group_id"));
+    }
+
+    @Test
+    void shouldChangeFirstNameWhenValidArgsArePassed() throws DaoException {
+        prepareGroup();
+        StudentDao studentDao = new StudentDaoImpl(jdbcTemplate, daoProperties);
+        Student student = new Student(1, 1, "Mike", "Chelsey");
+        saveStudent(student);
+        String newName = "John";
+
+        studentDao.changeFirstName(1, newName);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(
+                "select * from students where student_id = 1");
+
+        assertTrue(result.next());
+        assertEquals(newName, result.getString("first_name"));
     }
 
 }

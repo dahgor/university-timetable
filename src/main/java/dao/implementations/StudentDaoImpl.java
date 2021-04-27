@@ -100,7 +100,13 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void changeFirstName(int studentId, String newFirstName) throws DaoException {
-
+        if (studentId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newFirstName == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeFirstName"), newFirstName, studentId);
     }
 
     @Override
