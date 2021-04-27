@@ -13,5 +13,5 @@ public interface StudentDao extends Dao<Student> {
 
     void changeLastName(int studentId, String newLastName) throws DaoException;
 
-    List<Student> findStudentsInGroup(int groupId) throws DaoException;
+    List<Student> findByGroup(int groupId) throws DaoException;
 }

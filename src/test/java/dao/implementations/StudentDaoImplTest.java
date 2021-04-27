@@ -197,7 +197,7 @@ class StudentDaoImplTest {
         saveStudent(student1);
         saveStudent(student2);
 
-        List<Student> itemsFromDb = studentDao.findStudentsInGroup(GROUP_ID);
+        List<Student> itemsFromDb = studentDao.findByGroup(GROUP_ID);
 
         assertEquals(2, itemsFromDb.size());
         assertEquals(student1, itemsFromDb.get(0));

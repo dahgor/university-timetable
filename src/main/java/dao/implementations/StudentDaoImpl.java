@@ -121,12 +121,12 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> findStudentsInGroup(int groupId) throws DaoException {
+    public List<Student> findByGroup(int groupId) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
 
-        return jdbc.query(queries.getQuery("findStudentsInGroup"), new Object[]{groupId},
+        return jdbc.query(queries.getQuery("findByGroup"), new Object[]{groupId},
                 new StudentMapper());
     }
 
