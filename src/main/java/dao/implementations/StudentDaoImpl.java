@@ -61,7 +61,11 @@ public class StudentDaoImpl implements StudentDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        try {
+            return keyHolder.getKey().intValue();
+        } catch (NullPointerException exception) {
+            throw new DaoException("Null is returned as an id from database");
+        }
     }
 
     @Override
