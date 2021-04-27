@@ -85,10 +85,26 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
+    public void changeName(int groupId, String newName) throws DaoException {
+        if (groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newName == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeName"), newName, groupId);
+    }
+
+    @Override
     public void assignGroupToCourse(int groupId, int courseId) throws DaoException {
         if (groupId <= 0 || courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }
         jdbc.update(queries.getQuery("assignGroupToCourse"), groupId, courseId);
+    }
+
+    @Override
+    public void deleteGroupFromCourse(int groupId, int courseId) throws DaoException {
+
     }
 }

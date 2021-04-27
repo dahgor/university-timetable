@@ -74,6 +74,22 @@ class GroupDaoImplTest {
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeNameMethod() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class, () -> groupDao.changeName(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeNameMethod() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class, () -> groupDao.changeName(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameGroupFromDbWhenSaved() throws DaoException {
         GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
         Group group = new Group(1, "ME-15");
@@ -124,6 +140,20 @@ class GroupDaoImplTest {
         assertEquals(2, itemsFromDb.size());
         assertEquals(group1, itemsFromDb.get(0));
         assertEquals(group2, itemsFromDb.get(1));
+    }
+
+    @Test
+    void shouldChangeNameWhenValidArgsArePassed() throws DaoException {
+        GroupDaoImpl groupDao = new GroupDaoImpl(jdbcTemplate, daoProperties);
+        Group group = new Group(1, "ME-15");
+        saveGroup(group);
+        String newName = "EN-12";
+
+        groupDao.changeName(1, newName);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from groups where group_id = 1");
+
+        assertTrue(result.next());
+        assertEquals(newName, result.getString("group_name"));
     }
 
     @Test
