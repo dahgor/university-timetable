@@ -3,6 +3,7 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Professor;
+import dao.interfaces.ProfessorDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -81,6 +82,51 @@ class ProfessorDaoImplTest {
         ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> professorDao.findById(INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeFirstNameMethod() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> professorDao.changeFirstName(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeFirstNameMethod() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> professorDao.changeFirstName(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeLastNameMethod() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> professorDao.changeLastName(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeLastNameMethod() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> professorDao.changeLastName(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdsArePassedToDeleteFromCourseMethod() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> professorDao.deleteProfessorFromCourse(INVALID_ID, 1));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -169,6 +215,48 @@ class ProfessorDaoImplTest {
         assertEquals(2, result.size());
         assertEquals(professor1, result.get(0));
         assertEquals(professor2, result.get(1));
+    }
+
+    @Test
+    void shouldChangeFirstNameWhenValidArgsArePassed() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+        Professor professor = new Professor(1, "Mike", "Smith");
+        saveProfessor(professor);
+        String newName = "John";
+
+        professorDao.changeFirstName(1, newName);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professors");
+
+        assertTrue(result.next());
+        assertEquals(newName, result.getString("first_name"));
+    }
+
+    @Test
+    void shouldChangeLastNameWhenValidArgsArePassed() throws DaoException {
+        ProfessorDao professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+        Professor professor = new Professor(1, "Mike", "Smith");
+        saveProfessor(professor);
+        String newName = "McCotly";
+
+        professorDao.changeLastName(1, newName);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professors");
+
+        assertTrue(result.next());
+        assertEquals(newName, result.getString("last_name"));
+    }
+
+    @Test
+    void shouldDeleteProfessorFromCourse() throws DaoException {
+        prepareDataForAssigning();
+        ProfessorDaoImpl professorDao = new ProfessorDaoImpl(jdbcTemplate, daoProperties);
+        Professor professor = new Professor(1, "Alan", "Smith");
+        saveProfessor(professor);
+        assignProfessorToCourse(1, 1);
+
+        professorDao.deleteProfessorFromCourse(1, 1);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from professor_course");
+
+        assertFalse(result.next());
     }
 
 }

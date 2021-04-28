@@ -98,12 +98,24 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void changeFirstName(int professorId, String newFirstName) throws DaoException {
-
+        if (professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newFirstName == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeFirstName"), newFirstName, professorId);
     }
 
     @Override
     public void changeLastName(int professorId, String newLastName) throws DaoException {
-
+        if (professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newLastName == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeLastName"), newLastName, professorId);
     }
 
     @Override
@@ -116,6 +128,9 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void deleteProfessorFromCourse(int professorId, int courseId) throws DaoException {
-
+        if (professorId <= 0 || courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("deleteProfessorFromCourse"), professorId, courseId);
     }
 }
