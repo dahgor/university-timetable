@@ -89,12 +89,24 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public void changeName(int courseId, String newName) throws DaoException {
-
+        if (courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newName == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeName"), newName, courseId);
     }
 
     @Override
     public void changeDescription(int courseId, String newDescription) throws DaoException {
-
+        if (courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newDescription == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeDescription"), newDescription, courseId);
     }
 
     @Override

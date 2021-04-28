@@ -95,6 +95,42 @@ class CourseDaoImplTest {
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeNameMethod() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> courseDao.changeName(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeNameMethod() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> courseDao.changeName(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeDescriptionMethod() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> courseDao.changeDescription(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeDescriptionMethod() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> courseDao.changeDescription(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameCourseFromDbWhenSaved() throws DaoException {
         CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
         Course course = new Course(1, "Math", "description");
@@ -174,6 +210,34 @@ class CourseDaoImplTest {
 
         assertEquals(1, result.size());
         assertEquals(course, result.get(0));
+    }
+
+    @Test
+    void shouldChangeNameWhenValidArgsArePassed() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+        Course course = new Course(1, "Math", "description");
+        saveCourse(course);
+        String newName = "Physics";
+
+        courseDao.changeName(1, newName);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from courses");
+
+        assertTrue(result.next());
+        assertEquals(newName, result.getString("course_name"));
+    }
+
+    @Test
+    void shouldChangeDescriptionWhenValidArgsArePassed() throws DaoException {
+        CourseDaoImpl courseDao = new CourseDaoImpl(jdbcTemplate, daoProperties);
+        Course course = new Course(1, "Math", "description");
+        saveCourse(course);
+        String newDescription = "new description";
+
+        courseDao.changeDescription(1, newDescription);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from courses");
+
+        assertTrue(result.next());
+        assertEquals(newDescription, result.getString("course_description"));
     }
 
 }
