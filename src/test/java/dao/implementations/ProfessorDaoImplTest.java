@@ -164,7 +164,7 @@ class ProfessorDaoImplTest {
         assignProfessorToCourse(professor1.getId(), COURSE_ID);
         assignProfessorToCourse(professor2.getId(), COURSE_ID);
 
-        List<Professor> result = professorDao.findProfessorsForCourse(COURSE_ID);
+        List<Professor> result = professorDao.findByCourse(COURSE_ID);
 
         assertEquals(2, result.size());
         assertEquals(professor1, result.get(0));

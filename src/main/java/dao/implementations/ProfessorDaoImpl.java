@@ -88,12 +88,22 @@ public class ProfessorDaoImpl implements ProfessorDao {
     }
 
     @Override
-    public List<Professor> findProfessorsForCourse(int courseId) throws DaoException {
+    public List<Professor> findByCourse(int courseId) throws DaoException {
         if (courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findProfessorsForCourse"), new Object[]{courseId},
+        return jdbc.query(queries.getQuery("findByCourse"), new Object[]{courseId},
                 new ProfessorMapper());
+    }
+
+    @Override
+    public void changeFirstName(int professorId, String newFirstName) throws DaoException {
+
+    }
+
+    @Override
+    public void changeLastName(int professorId, String newLastName) throws DaoException {
+
     }
 
     @Override
@@ -102,5 +112,10 @@ public class ProfessorDaoImpl implements ProfessorDao {
             throw new DaoException(ID_ERROR);
         }
         jdbc.update(queries.getQuery("assignProfessorToCourse"), professorId, courseId);
+    }
+
+    @Override
+    public void deleteProfessorFromCourse(int professorId, int courseId) throws DaoException {
+
     }
 }
