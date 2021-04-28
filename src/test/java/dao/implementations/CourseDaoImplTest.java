@@ -156,7 +156,7 @@ class CourseDaoImplTest {
         createProfessor("Alan", "Smith");
         assignProfessorToCourse(PROFESSOR_ID, course.getId());
 
-        List<Course> result = courseDao.findCoursesForProfessor(1);
+        List<Course> result = courseDao.findByProfessor(1);
 
         assertEquals(1, result.size());
         assertEquals(course, result.get(0));
@@ -170,7 +170,7 @@ class CourseDaoImplTest {
         createGroup("ME-15");
         assignGroupToCourse(GROUP_ID, course.getId());
 
-        List<Course> result = courseDao.findCoursesForGroup(1);
+        List<Course> result = courseDao.findByGroup(1);
 
         assertEquals(1, result.size());
         assertEquals(course, result.get(0));

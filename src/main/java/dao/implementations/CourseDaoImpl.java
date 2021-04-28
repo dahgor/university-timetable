@@ -88,20 +88,30 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<Course> findCoursesForProfessor(int professorId) throws DaoException {
+    public void changeName(int courseId, String newName) throws DaoException {
+
+    }
+
+    @Override
+    public void changeDescription(int courseId, String newDescription) throws DaoException {
+
+    }
+
+    @Override
+    public List<Course> findByProfessor(int professorId) throws DaoException {
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findCoursesForProfessor"), new Object[]{professorId},
+        return jdbc.query(queries.getQuery("findByProfessor"), new Object[]{professorId},
                 new CourseMapper());
     }
 
     @Override
-    public List<Course> findCoursesForGroup(int groupId) throws DaoException {
+    public List<Course> findByGroup(int groupId) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findCoursesForGroup"), new Object[]{groupId},
+        return jdbc.query(queries.getQuery("findByGroup"), new Object[]{groupId},
                 new CourseMapper());
     }
 }
