@@ -3,7 +3,7 @@ package dao.implementations;
 import dao.DaoException;
 import dao.DaoProperties;
 import dao.entities.Auditory;
-import dao.interfaces.Dao;
+import dao.interfaces.AuditoryDao;
 import dao.mappers.AuditoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("auditoryDao")
-public class AuditoryDaoImpl implements Dao<Auditory> {
+public class AuditoryDaoImpl implements AuditoryDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
@@ -84,5 +84,16 @@ public class AuditoryDaoImpl implements Dao<Auditory> {
     @Override
     public List<Auditory> findAllRecords() throws DaoException {
         return jdbc.query(queries.getQuery("findAllRecords"), new AuditoryMapper());
+    }
+
+    @Override
+    public void changeLocation(int auditoryId, String newLocation) throws DaoException {
+        if (auditoryId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        if (newLocation == null) {
+            throw new DaoException(NULL_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeLocation"), newLocation, auditoryId);
     }
 }

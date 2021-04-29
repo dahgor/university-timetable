@@ -74,6 +74,24 @@ class AuditoryDaoImplTest {
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeLocationMethod() throws DaoException {
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> auditoryDao.changeLocation(INVALID_ID, ""));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeLocationMethod() throws DaoException {
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> auditoryDao.changeLocation(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameAuditoryFromDbWhenSaved() throws DaoException {
         AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
         Auditory auditory = new Auditory(1, "1st floor");
@@ -124,6 +142,20 @@ class AuditoryDaoImplTest {
         assertEquals(2, itemsFromDb.size());
         assertEquals(auditory1, itemsFromDb.get(0));
         assertEquals(auditory2, itemsFromDb.get(1));
+    }
+
+    @Test
+    void shouldChangeLocationWhenValidIdIsPassed() throws DaoException {
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
+        Auditory auditory = new Auditory(1, "1st floor");
+        saveAuditory(auditory);
+        String newLocation = "2nd floor";
+
+        auditoryDao.changeLocation(1, newLocation);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from auditories");
+
+        assertTrue(result.next());
+        assertEquals(newLocation, result.getString("auditory_location"));
     }
 
 }
