@@ -2,7 +2,7 @@ package services.implementations;
 
 import dao.DaoException;
 import dao.entities.Auditory;
-import dao.implementations.AuditoryDao;
+import dao.implementations.AuditoryDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.ServiceException;
@@ -16,13 +16,13 @@ public class AuditoryService implements Service<Auditory> {
     private static final String NULL_ERROR = "Null is passed";
     private static final String ID_ERROR = "Invalid id is passed";
 
-    private AuditoryDao auditoryDao;
+    private AuditoryDaoImpl auditoryDao;
 
     public AuditoryService() {
     }
 
     @Autowired
-    public AuditoryService(AuditoryDao auditoryDao) throws ServiceException {
+    public AuditoryService(AuditoryDaoImpl auditoryDao) throws ServiceException {
         if (auditoryDao == null) {
             throw new ServiceException(NULL_ERROR);
         }

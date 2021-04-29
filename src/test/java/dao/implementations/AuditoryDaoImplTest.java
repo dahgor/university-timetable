@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuditoryDaoTest {
+class AuditoryDaoImplTest {
     private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
     private static final String PROPERTIES = "./src/test/resources/daoProperties/auditoryDao.properties";
     private static final String NULL_ERROR = "Null is passed";
@@ -44,14 +44,14 @@ class AuditoryDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenNullIsPassedToConstructor() {
-        Exception exception = assertThrows(DaoException.class, () -> new AuditoryDao(null,
+        Exception exception = assertThrows(DaoException.class, () -> new AuditoryDaoImpl(null,
                 null));
         assertEquals(NULL_ERROR, exception.getMessage());
     }
 
     @Test
     void shouldThrowDaoExceptionWhenNullIsPassedToSaveMethod() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> auditoryDao.save(null));
         assertEquals(NULL_ERROR, exception.getMessage());
@@ -59,7 +59,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenInvalidIdIsPassedToDeleteByIdMethod() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> auditoryDao.deleteById(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
@@ -67,7 +67,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByIdMethod() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> auditoryDao.findById(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
@@ -75,7 +75,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldReturnSameAuditoryFromDbWhenSaved() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
         Auditory auditory = new Auditory(1, "1st floor");
         auditoryDao.save(auditory);
 
@@ -88,7 +88,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldReturnCorrectIdWhenSaved() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
         Auditory auditory1 = new Auditory(1, "1st floor");
         Auditory auditory2 = new Auditory(2, "Next to WC on the 3rd floor");
 
@@ -101,7 +101,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
         Auditory auditory = new Auditory(1, "1st floor");
         saveAuditory(auditory);
 
@@ -113,7 +113,7 @@ class AuditoryDaoTest {
 
     @Test
     void shouldRetrieveItemsFromDb() throws DaoException {
-        AuditoryDao auditoryDao = new AuditoryDao(jdbcTemplate, daoProperties);
+        AuditoryDaoImpl auditoryDao = new AuditoryDaoImpl(jdbcTemplate, daoProperties);
         Auditory auditory1 = new Auditory(1, "1st floor");
         Auditory auditory2 = new Auditory(2, "Next to WC on the 3rd floor");
         saveAuditory(auditory1);

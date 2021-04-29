@@ -2,7 +2,7 @@ package services.implementations;
 
 import dao.DaoException;
 import dao.entities.Auditory;
-import dao.implementations.AuditoryDao;
+import dao.implementations.AuditoryDaoImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -26,7 +26,7 @@ class AuditoryServiceTest {
     private static int INVALID_ID = -1;
 
     @Mock
-    private AuditoryDao auditoryDao;
+    private AuditoryDaoImpl auditoryDao;
 
     @Test
     void shouldThrowServiceExceptionWhenNullIsPassedToConstructor() {

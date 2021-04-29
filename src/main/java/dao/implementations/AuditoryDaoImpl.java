@@ -16,17 +16,17 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component("auditoryDao")
-public class AuditoryDao implements Dao<Auditory> {
+public class AuditoryDaoImpl implements Dao<Auditory> {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
 
     private JdbcTemplate jdbc;
     private DaoProperties queries;
 
-    public AuditoryDao() {
+    public AuditoryDaoImpl() {
     }
 
-    public AuditoryDao(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
+    public AuditoryDaoImpl(JdbcTemplate jdbc, DaoProperties queries) throws DaoException {
         if (jdbc == null || queries == null) {
             throw new DaoException(NULL_ERROR);
         }
