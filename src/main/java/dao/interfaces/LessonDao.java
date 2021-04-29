@@ -7,23 +7,34 @@ import java.sql.Date;
 import java.util.List;
 
 public interface LessonDao extends Dao<Lesson> {
-    List<Lesson> findScheduledLessonsForTime(int timeId) throws DaoException;
+
+    void changeAuditory(int lessonId, int auditoryId) throws DaoException;
+
+    void changeCourse(int lessonId, int courseId) throws DaoException;
+
+    void changeGroup(int lessonId, int groupId) throws DaoException;
+
+    void changeProfessor(int lessonId, int professorId) throws DaoException;
+
+    void changeTime(int lessonId, int timeId) throws DaoException;
 
     void assignLessonToTime(int lessonId, int timeId) throws DaoException;
 
-    List<Lesson> findLessonsWithCourse(int courseId) throws DaoException;
+    List<Lesson> findByCourse(int courseId) throws DaoException;
 
-    List<Lesson> findLessonsWithProfessor(int professorId) throws DaoException;
+    List<Lesson> findByProfessor(int professorId) throws DaoException;
 
-    List<Lesson> findLessonsWithGroup(int groupId) throws DaoException;
+    List<Lesson> findByGroup(int groupId) throws DaoException;
 
-    List<Lesson> findLessonsWithAuditory(int auditoryId) throws DaoException;
+    List<Lesson> findByAuditory(int auditoryId) throws DaoException;
 
-    List<Lesson> findLessonsForGroupForDay(int groupId, Date day) throws DaoException;
+    List<Lesson> findByTime(int timeId) throws DaoException;
 
-    List<Lesson> findLessonsForGroupForMonth(int groupId, Date month) throws DaoException;
+    List<Lesson> findByGroupAndDate(int groupId, Date day) throws DaoException;
 
-    List<Lesson> findLessonsForProfessorForDay(int professorId, Date day) throws DaoException;
+    List<Lesson> findByProfessorAndDate(int professorId, Date day) throws DaoException;
 
-    List<Lesson> findLessonsForProfessorForMonth(int professorId, Date month) throws DaoException;
+    List<Lesson> findByGroupAndMonth(int groupId, Date month) throws DaoException;
+
+    List<Lesson> findByProfessorAndMonth(int professorId, Date month) throws DaoException;
 }

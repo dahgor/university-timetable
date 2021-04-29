@@ -107,7 +107,7 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findScheduledLessonsForTime(INVALID_ID));
+                () -> lessonDao.findByTime(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -125,7 +125,7 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsWithCourse(INVALID_ID));
+                () -> lessonDao.findByCourse(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -134,7 +134,7 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsWithProfessor(INVALID_ID));
+                () -> lessonDao.findByProfessor(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -143,7 +143,7 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsWithGroup(INVALID_ID));
+                () -> lessonDao.findByGroup(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -160,7 +160,7 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsWithAuditory(INVALID_ID));
+                () -> lessonDao.findByAuditory(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
@@ -169,9 +169,9 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForGroupForDay(INVALID_ID, VALID_DATE));
+                () -> lessonDao.findByGroupAndDate(INVALID_ID, VALID_DATE));
         Exception nullException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForGroupForDay(VALID_ID, null));
+                () -> lessonDao.findByGroupAndDate(VALID_ID, null));
         assertEquals(ID_ERROR, idException.getMessage());
         assertEquals(NULL_ERROR, nullException.getMessage());
     }
@@ -181,9 +181,9 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForGroupForMonth(INVALID_ID, VALID_DATE));
+                () -> lessonDao.findByGroupAndMonth(INVALID_ID, VALID_DATE));
         Exception nullException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForGroupForMonth(VALID_ID, null));
+                () -> lessonDao.findByGroupAndMonth(VALID_ID, null));
         assertEquals(ID_ERROR, idException.getMessage());
         assertEquals(NULL_ERROR, nullException.getMessage());
     }
@@ -193,9 +193,9 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForProfessorForDay(INVALID_ID, VALID_DATE));
+                () -> lessonDao.findByProfessorAndDate(INVALID_ID, VALID_DATE));
         Exception nullException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForProfessorForDay(VALID_ID, null));
+                () -> lessonDao.findByProfessorAndDate(VALID_ID, null));
         assertEquals(ID_ERROR, idException.getMessage());
         assertEquals(NULL_ERROR, nullException.getMessage());
     }
@@ -205,9 +205,9 @@ class LessonDaoImplTest {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForProfessorForMonth(INVALID_ID, VALID_DATE));
+                () -> lessonDao.findByProfessorAndMonth(INVALID_ID, VALID_DATE));
         Exception nullException = assertThrows(DaoException.class,
-                () -> lessonDao.findLessonsForProfessorForMonth(VALID_ID, null));
+                () -> lessonDao.findByProfessorAndMonth(VALID_ID, null));
         assertEquals(ID_ERROR, idException.getMessage());
         assertEquals(NULL_ERROR, nullException.getMessage());
     }
@@ -300,7 +300,7 @@ class LessonDaoImplTest {
         assignLessonToTime(lesson1.getId(), TIME_ID);
         assignLessonToTime(lesson2.getId(), TIME_ID);
 
-        List<Lesson> result = lessonDao.findScheduledLessonsForTime(TIME_ID);
+        List<Lesson> result = lessonDao.findByTime(TIME_ID);
 
         assertEquals(2, result.size());
         assertEquals(lesson1, result.get(0));
@@ -319,7 +319,7 @@ class LessonDaoImplTest {
         assignLessonToTime(lesson1.getId(), TIME_ID);
         assignLessonToTime(lesson2.getId(), TIME_ID);
 
-        List<Lesson> result = lessonDao.findLessonsForGroupForDay(1,
+        List<Lesson> result = lessonDao.findByGroupAndDate(1,
                 Date.valueOf(LocalDate.now()));
 
         assertEquals(1, result.size());
@@ -338,7 +338,7 @@ class LessonDaoImplTest {
         assignLessonToTime(lesson1.getId(), TIME_ID);
         assignLessonToTime(lesson2.getId(), TIME_ID);
 
-        List<Lesson> result = lessonDao.findLessonsForGroupForMonth(2,
+        List<Lesson> result = lessonDao.findByGroupAndMonth(2,
                 Date.valueOf(LocalDate.now()));
 
         assertEquals(1, result.size());
@@ -357,7 +357,7 @@ class LessonDaoImplTest {
         assignLessonToTime(lesson1.getId(), TIME_ID);
         assignLessonToTime(lesson2.getId(), TIME_ID);
 
-        List<Lesson> result = lessonDao.findLessonsForProfessorForDay(1,
+        List<Lesson> result = lessonDao.findByProfessorAndDate(1,
                 Date.valueOf(LocalDate.now()));
 
         assertEquals(1, result.size());
@@ -376,7 +376,7 @@ class LessonDaoImplTest {
         assignLessonToTime(lesson1.getId(), TIME_ID);
         assignLessonToTime(lesson2.getId(), TIME_ID);
 
-        List<Lesson> result = lessonDao.findLessonsForProfessorForMonth(2,
+        List<Lesson> result = lessonDao.findByProfessorAndMonth(2,
                 Date.valueOf(LocalDate.now()));
 
         assertEquals(1, result.size());
