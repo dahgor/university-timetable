@@ -91,12 +91,43 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public List<Lesson> findScheduledLessonsForTime(int timeId) throws DaoException {
-        if (timeId <= 0) {
+    public void changeAuditory(int lessonId, int auditoryId) throws DaoException {
+        if (lessonId <= 0 || auditoryId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findScheduledLessonsForTime"), new Object[]{timeId},
-                new LessonMapper());
+        jdbc.update(queries.getQuery("changeAuditory"), auditoryId, lessonId);
+    }
+
+    @Override
+    public void changeCourse(int lessonId, int courseId) throws DaoException {
+        if (lessonId <= 0 || courseId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeCourse"), courseId, lessonId);
+    }
+
+    @Override
+    public void changeGroup(int lessonId, int groupId) throws DaoException {
+        if (lessonId <= 0 || groupId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeGroup"), groupId, lessonId);
+    }
+
+    @Override
+    public void changeProfessor(int lessonId, int professorId) throws DaoException {
+        if (lessonId <= 0 || professorId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeProfessor"), professorId, lessonId);
+    }
+
+    @Override
+    public void changeTime(int lessonId, int timeId) throws DaoException {
+        if (lessonId <= 0 || timeId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        jdbc.update(queries.getQuery("changeTime"), timeId, lessonId);
     }
 
     @Override
@@ -108,86 +139,95 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public List<Lesson> findLessonsWithCourse(int courseId) throws DaoException {
+    public List<Lesson> findByTime(int timeId) throws DaoException {
+        if (timeId <= 0) {
+            throw new DaoException(ID_ERROR);
+        }
+        return jdbc.query(queries.getQuery("findByTime"), new Object[]{timeId},
+                new LessonMapper());
+    }
+
+    @Override
+    public List<Lesson> findByCourse(int courseId) throws DaoException {
         if (courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsWithCourse"), new Object[]{courseId},
+        return jdbc.query(queries.getQuery("findByCourse"), new Object[]{courseId},
                 new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsWithProfessor(int professorId) throws DaoException {
+    public List<Lesson> findByProfessor(int professorId) throws DaoException {
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsWithProfessor"), new Object[]{professorId},
+        return jdbc.query(queries.getQuery("findByProfessor"), new Object[]{professorId},
                 new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsWithGroup(int groupId) throws DaoException {
+    public List<Lesson> findByGroup(int groupId) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsWithGroup"), new Object[]{groupId},
+        return jdbc.query(queries.getQuery("findByGroup"), new Object[]{groupId},
                 new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsWithAuditory(int auditoryId) throws DaoException {
+    public List<Lesson> findByAuditory(int auditoryId) throws DaoException {
         if (auditoryId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsWithAuditory"), new Object[]{auditoryId},
+        return jdbc.query(queries.getQuery("findByAuditory"), new Object[]{auditoryId},
                 new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsForGroupForDay(int groupId, Date day) throws DaoException {
+    public List<Lesson> findByGroupAndDate(int groupId, Date day) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
         if (day == null) {
             throw new DaoException(NULL_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsForGroupForDay"),
+        return jdbc.query(queries.getQuery("findByGroupAndDate"),
                 new Object[]{groupId, day}, new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsForGroupForMonth(int groupId, Date month) throws DaoException {
+    public List<Lesson> findByGroupAndMonth(int groupId, Date month) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
         if (month == null) {
             throw new DaoException(NULL_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsForGroupForMonth"),
+        return jdbc.query(queries.getQuery("findByGroupAndMonth"),
                 new Object[]{groupId, month}, new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsForProfessorForDay(int professorId, Date day) throws DaoException {
+    public List<Lesson> findByProfessorAndDate(int professorId, Date day) throws DaoException {
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
         if (day == null) {
             throw new DaoException(NULL_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsForProfessorForDay"),
+        return jdbc.query(queries.getQuery("findByProfessorAndDate"),
                 new Object[]{professorId, day}, new LessonMapper());
     }
 
     @Override
-    public List<Lesson> findLessonsForProfessorForMonth(int professorId, Date month) throws DaoException {
+    public List<Lesson> findByProfessorAndMonth(int professorId, Date month) throws DaoException {
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
         if (month == null) {
             throw new DaoException(NULL_ERROR);
         }
-        return jdbc.query(queries.getQuery("findLessonsForProfessorForMonth"),
+        return jdbc.query(queries.getQuery("findByProfessorAndMonth"),
                 new Object[]{professorId, month}, new LessonMapper());
     }
 

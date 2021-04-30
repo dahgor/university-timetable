@@ -103,7 +103,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindScheduledLessonsForTimeMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByTimeMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
@@ -121,7 +121,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindLessonsWithCourseMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByCourseMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
@@ -130,7 +130,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindLessonsWithProfessorMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByProfessorMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
@@ -139,7 +139,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindLessonsWithGroupMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByGroupMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
@@ -156,7 +156,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindLessonsWithAuditoryMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByAuditoryMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class,
@@ -165,7 +165,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindLessonsForGroupForDayMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindByGroupAndDateMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
@@ -177,7 +177,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindLessonsForGroupForMonthMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindByGroupAndMonthMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
@@ -189,7 +189,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindLessonsForProfessorForDayMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindByProfessorAndDateMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
@@ -201,7 +201,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindLessonsForProfessorForMonthMethod() throws DaoException {
+    void shouldThrowDaoExceptionWhenInvalidArgsArePassedToFindByProfessorAndMonthMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception idException = assertThrows(DaoException.class,
@@ -210,6 +210,51 @@ class LessonDaoImplTest {
                 () -> lessonDao.findByProfessorAndMonth(VALID_ID, null));
         assertEquals(ID_ERROR, idException.getMessage());
         assertEquals(NULL_ERROR, nullException.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeAuditoryMethod() throws DaoException {
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> lessonDao.changeAuditory(INVALID_ID, INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeCourseMethod() throws DaoException {
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> lessonDao.changeCourse(INVALID_ID, INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeGroupMethod() throws DaoException {
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> lessonDao.changeGroup(INVALID_ID, INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeProfessorMethod() throws DaoException {
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> lessonDao.changeProfessor(INVALID_ID, INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeTimeMethod() throws DaoException {
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> lessonDao.changeTime(INVALID_ID, INVALID_ID));
+        assertEquals(ID_ERROR, exception.getMessage());
     }
 
     @Test
@@ -381,6 +426,66 @@ class LessonDaoImplTest {
 
         assertEquals(1, result.size());
         assertEquals(lesson2, result.get(0));
+    }
+
+    @Test
+    void shouldChangeAuditoryWhenValidArgsArePassed() throws DaoException {
+        prepareDataForTwoLessons();
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+        Lesson lesson = new Lesson(1, 1, 1, 1, 1);
+        saveLesson(lesson);
+        int newAuditory = 2;
+
+        lessonDao.changeAuditory(1, newAuditory);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
+
+        assertTrue(result.next());
+        assertEquals(newAuditory, result.getInt("auditory_id"));
+    }
+
+    @Test
+    void shouldChangeCourseWhenValidArgsArePassed() throws DaoException {
+        prepareDataForTwoLessons();
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+        Lesson lesson = new Lesson(1, 1, 1, 1, 1);
+        saveLesson(lesson);
+        int newCourse = 2;
+
+        lessonDao.changeCourse(1, newCourse);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
+
+        assertTrue(result.next());
+        assertEquals(newCourse, result.getInt("course_id"));
+    }
+
+    @Test
+    void shouldChangeGroupWhenValidArgsArePassed() throws DaoException {
+        prepareDataForTwoLessons();
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+        Lesson lesson = new Lesson(1, 1, 1, 1, 1);
+        saveLesson(lesson);
+        int newGroup = 2;
+
+        lessonDao.changeGroup(1, newGroup);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
+
+        assertTrue(result.next());
+        assertEquals(newGroup, result.getInt("group_id"));
+    }
+
+    @Test
+    void shouldChangeProfessorWhenValidArgsArePassed() throws DaoException {
+        prepareDataForTwoLessons();
+        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
+        Lesson lesson = new Lesson(1, 1, 1, 1, 1);
+        saveLesson(lesson);
+        int newProfessor = 2;
+
+        lessonDao.changeProfessor(1, newProfessor);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from lessons");
+
+        assertTrue(result.next());
+        assertEquals(newProfessor, result.getInt("professor_id"));
     }
 
 }
