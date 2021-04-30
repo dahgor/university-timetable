@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TimePeriodDaoTest {
+class TimePeriodDaoImplTest {
     private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTables.sql";
     private static final String PROPERTIES = "./src/test/resources/daoProperties/timePeriodDao.properties";
     private static final String NULL_ERROR = "Null is passed";
@@ -56,14 +56,14 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenNullIsPassedToConstructor() {
-        Exception exception = assertThrows(DaoException.class, () -> new TimePeriodDao(null,
+        Exception exception = assertThrows(DaoException.class, () -> new TimePeriodDaoImpl(null,
                 null));
         assertEquals(NULL_ERROR, exception.getMessage());
     }
 
     @Test
     void shouldThrowDaoExceptionWhenNullIsPassedToSaveMethod() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> timePeriodDao.save(null));
         assertEquals(NULL_ERROR, exception.getMessage());
@@ -71,7 +71,7 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenInvalidIdIsPassedToDeleteByIdMethod() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> timePeriodDao.deleteById(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
@@ -79,15 +79,51 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByIdMethod() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> timePeriodDao.findById(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 
     @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeStartHourMethod() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> timePeriodDao.changeStartHour(INVALID_ID, START));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToChangeEndHourMethod() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> timePeriodDao.changeEndHour(INVALID_ID, END));
+        assertEquals(ID_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeStartHourMethod() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> timePeriodDao.changeStartHour(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowDaoExceptionWhenNullIsPassedToChangeEndHourMethod() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+
+        Exception exception = assertThrows(DaoException.class,
+                () -> timePeriodDao.changeEndHour(1, null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
     void shouldReturnSameAuditoryFromDbWhenSaved() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
         TimePeriod timePeriod = new TimePeriod(1, START, END);
         timePeriodDao.save(timePeriod);
 
@@ -98,7 +134,7 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldReturnCorrectIdWhenSaved() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
         TimePeriod timePeriod1 = new TimePeriod(1, START, END);
         TimePeriod timePeriod2 = new TimePeriod(2, START_2, END_2);
 
@@ -111,7 +147,7 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldDeleteItemFromDbWhenValidIdIsPassed() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
         TimePeriod timePeriod = new TimePeriod(1, START, END);
         saveTimePeriod(timePeriod);
 
@@ -123,7 +159,7 @@ class TimePeriodDaoTest {
 
     @Test
     void shouldRetrieveItemsFromDb() throws DaoException {
-        TimePeriodDao timePeriodDao = new TimePeriodDao(jdbcTemplate, daoProperties);
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
         TimePeriod timePeriod1 = new TimePeriod(1, START, END);
         TimePeriod timePeriod2 = new TimePeriod(2, START_2, END_2);
         saveTimePeriod(timePeriod1);
@@ -134,6 +170,32 @@ class TimePeriodDaoTest {
         assertEquals(2, itemsFromDb.size());
         assertEquals(timePeriod1, itemsFromDb.get(0));
         assertEquals(timePeriod2, itemsFromDb.get(1));
+    }
+
+    @Test
+    void shouldChangeStartHourWhenValidArgsArePassed() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+        TimePeriod timePeriod = new TimePeriod(1, START, END);
+        saveTimePeriod(timePeriod);
+
+        timePeriodDao.changeStartHour(1, START_2);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from time_periods");
+
+        assertTrue(result.next());
+        assertEquals(START_2, result.getTimestamp("start_hour"));
+    }
+
+    @Test
+    void shouldChangeEndHourWhenValidArgsArePassed() throws DaoException {
+        TimePeriodDaoImpl timePeriodDao = new TimePeriodDaoImpl(jdbcTemplate, daoProperties);
+        TimePeriod timePeriod = new TimePeriod(1, START, END);
+        saveTimePeriod(timePeriod);
+
+        timePeriodDao.changeEndHour(1, END_2);
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select * from time_periods");
+
+        assertTrue(result.next());
+        assertEquals(END_2, result.getTimestamp("end_hour"));
     }
 
 }
