@@ -43,12 +43,12 @@ public class AuditoryService implements Service<Auditory> {
     }
 
     @Override
-    public void deleteById(int id) throws ServiceException {
-        if (id <= 0) {
-            throw new ServiceException(ID_ERROR);
+    public void delete(Auditory item) throws ServiceException {
+        if (item == null) {
+            throw new ServiceException(NULL_ERROR);
         }
         try {
-            auditoryDao.deleteById(id);
+            auditoryDao.deleteById(item.getId());
         } catch (DaoException e) {
             throw new ServiceException(DAO_ERROR);
         }

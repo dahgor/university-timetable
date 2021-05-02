@@ -52,8 +52,8 @@ class AuditoryServiceTest {
     @Test
     void shouldThrowServiceExceptionWhenNullIsPassedToDeleteByIdMethod() {
         Exception exception = assertThrows(ServiceException.class,
-                () -> new AuditoryService(auditoryDao).deleteById(INVALID_ID));
-        assertEquals(ID_ERROR, exception.getMessage());
+                () -> new AuditoryService(auditoryDao).delete(null));
+        assertEquals(NULL_ERROR, exception.getMessage());
     }
 
     @Test
@@ -76,7 +76,7 @@ class AuditoryServiceTest {
         AuditoryService auditoryService = new AuditoryService(auditoryDao);
         Auditory auditory = new Auditory(1, "1st floor");
 
-        auditoryService.deleteById(auditory.getId());
+        auditoryService.delete(auditory);
 
         calls.verify(auditoryDao).deleteById(auditory.getId());
     }
