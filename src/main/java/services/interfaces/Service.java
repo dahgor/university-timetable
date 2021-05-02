@@ -8,7 +8,7 @@ public interface Service<T> {
 
     T save(T item) throws ServiceException;
 
-    void deleteById(int id) throws ServiceException;
+    void delete(T item) throws ServiceException;
 
     T findById(int id) throws ServiceException;
 
