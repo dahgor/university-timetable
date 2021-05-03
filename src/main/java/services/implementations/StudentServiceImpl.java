@@ -6,7 +6,6 @@ import dao.entities.Student;
 import dao.interfaces.GroupDao;
 import dao.interfaces.StudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import services.ServiceException;
 import services.interfaces.StudentService;
@@ -34,13 +33,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Autowired
-    @Qualifier("studentDao")
     public void setStudentDao(StudentDao studentDao) {
         this.studentDao = studentDao;
     }
 
     @Autowired
-    @Qualifier("groupDao")
     public void setGroupDao(GroupDao groupDao) {
         this.groupDao = groupDao;
     }
