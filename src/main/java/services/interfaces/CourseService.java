@@ -15,5 +15,5 @@ public interface CourseService extends Service<Course> {
 
     List<Professor> getProfessorList(Course course) throws ServiceException;
 
-    List<Group> getGroupList(Group group) throws ServiceException;
+    List<Group> getGroupList(Course course) throws ServiceException;
 }
