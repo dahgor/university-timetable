@@ -4,12 +4,19 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public class TimePeriod {
+    private static final int NO_ID = 0;
 
     private int id;
     private Timestamp startHour;
     private Timestamp endHour;
 
     public TimePeriod() {
+    }
+
+    public TimePeriod(Timestamp startHour, Timestamp endHour) {
+        this.id = NO_ID;
+        this.startHour = startHour;
+        this.endHour = endHour;
     }
 
     public TimePeriod(int id, Timestamp startHour, Timestamp endHour) {
