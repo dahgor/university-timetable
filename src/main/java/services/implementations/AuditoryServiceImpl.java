@@ -6,23 +6,23 @@ import dao.implementations.AuditoryDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.ServiceException;
-import services.interfaces.Service;
+import services.interfaces.AuditoryService;
 
 import java.util.List;
 
 @Component
-public class AuditoryService implements Service<Auditory> {
+public class AuditoryServiceImpl implements AuditoryService {
     private static final String DAO_ERROR = "Dao error";
     private static final String NULL_ERROR = "Null is passed";
     private static final String ID_ERROR = "Invalid id is passed";
 
     private AuditoryDaoImpl auditoryDao;
 
-    public AuditoryService() {
+    public AuditoryServiceImpl() {
     }
 
     @Autowired
-    public AuditoryService(AuditoryDaoImpl auditoryDao) throws ServiceException {
+    public AuditoryServiceImpl(AuditoryDaoImpl auditoryDao) throws ServiceException {
         if (auditoryDao == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -72,6 +72,18 @@ public class AuditoryService implements Service<Auditory> {
             return auditoryDao.findAllRecords();
         } catch (DaoException e) {
             throw new ServiceException(DAO_ERROR);
+        }
+    }
+
+    @Override
+    public void changeLocation(Auditory auditory, String newLocation) throws ServiceException {
+        if (auditory == null || newLocation == null) {
+            throw new ServiceException(NULL_ERROR);
+        }
+        try {
+            auditoryDao.changeLocation(auditory.getId(), newLocation);
+        } catch (DaoException e) {
+            throw new ServiceException(DAO_ERROR, e);
         }
     }
 }
