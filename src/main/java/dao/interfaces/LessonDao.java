@@ -20,14 +20,6 @@ public interface LessonDao extends Dao<Lesson> {
 
     void assignLessonToTime(int lessonId, int timeId) throws DaoException;
 
-    List<Lesson> findByCourse(int courseId) throws DaoException;
-
-    List<Lesson> findByProfessor(int professorId) throws DaoException;
-
-    List<Lesson> findByGroup(int groupId) throws DaoException;
-
-    List<Lesson> findByAuditory(int auditoryId) throws DaoException;
-
     List<Lesson> findByTime(int timeId) throws DaoException;
 
     List<Lesson> findByGroupAndDate(int groupId, Date day) throws DaoException;

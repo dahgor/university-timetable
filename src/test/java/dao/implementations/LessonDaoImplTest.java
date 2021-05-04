@@ -121,46 +121,10 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByCourseMethod() throws DaoException {
-        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
-
-        Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findByCourse(INVALID_ID));
-        assertEquals(ID_ERROR, exception.getMessage());
-    }
-
-    @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByProfessorMethod() throws DaoException {
-        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
-
-        Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findByProfessor(INVALID_ID));
-        assertEquals(ID_ERROR, exception.getMessage());
-    }
-
-    @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByGroupMethod() throws DaoException {
-        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
-
-        Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findByGroup(INVALID_ID));
-        assertEquals(ID_ERROR, exception.getMessage());
-    }
-
-    @Test
     void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByIdMethod() throws DaoException {
         LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
 
         Exception exception = assertThrows(DaoException.class, () -> lessonDao.findById(INVALID_ID));
-        assertEquals(ID_ERROR, exception.getMessage());
-    }
-
-    @Test
-    void shouldThrowDaoExceptionWhenInvalidIdIsPassedToFindByAuditoryMethod() throws DaoException {
-        LessonDaoImpl lessonDao = new LessonDaoImpl(jdbcTemplate, daoProperties);
-
-        Exception exception = assertThrows(DaoException.class,
-                () -> lessonDao.findByAuditory(INVALID_ID));
         assertEquals(ID_ERROR, exception.getMessage());
     }
 

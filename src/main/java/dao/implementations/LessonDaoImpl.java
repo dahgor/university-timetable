@@ -148,42 +148,6 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public List<Lesson> findByCourse(int courseId) throws DaoException {
-        if (courseId <= 0) {
-            throw new DaoException(ID_ERROR);
-        }
-        return jdbc.query(queries.getQuery("findByCourse"), new Object[]{courseId},
-                new LessonMapper());
-    }
-
-    @Override
-    public List<Lesson> findByProfessor(int professorId) throws DaoException {
-        if (professorId <= 0) {
-            throw new DaoException(ID_ERROR);
-        }
-        return jdbc.query(queries.getQuery("findByProfessor"), new Object[]{professorId},
-                new LessonMapper());
-    }
-
-    @Override
-    public List<Lesson> findByGroup(int groupId) throws DaoException {
-        if (groupId <= 0) {
-            throw new DaoException(ID_ERROR);
-        }
-        return jdbc.query(queries.getQuery("findByGroup"), new Object[]{groupId},
-                new LessonMapper());
-    }
-
-    @Override
-    public List<Lesson> findByAuditory(int auditoryId) throws DaoException {
-        if (auditoryId <= 0) {
-            throw new DaoException(ID_ERROR);
-        }
-        return jdbc.query(queries.getQuery("findByAuditory"), new Object[]{auditoryId},
-                new LessonMapper());
-    }
-
-    @Override
     public List<Lesson> findByGroupAndDate(int groupId, Date day) throws DaoException {
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
