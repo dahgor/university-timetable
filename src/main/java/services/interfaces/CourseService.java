@@ -5,12 +5,11 @@ import dao.entities.Group;
 import dao.entities.Professor;
 import services.ServiceException;
 
-import java.rmi.ServerException;
 import java.util.List;
 
 public interface CourseService extends Service<Course> {
 
-    void changeName(Course course, String newName) throws ServerException;
+    void changeName(Course course, String newName) throws ServiceException;
 
     void changeDescription(Course course, String newDescription) throws ServiceException;
 
