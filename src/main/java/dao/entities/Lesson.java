@@ -3,6 +3,7 @@ package dao.entities;
 import java.util.Objects;
 
 public class Lesson {
+    private static final int NO_ID = 0;
 
     private int id;
     private int courseId;
@@ -11,6 +12,14 @@ public class Lesson {
     private int auditoryId;
 
     public Lesson() {
+    }
+
+    public Lesson(int courseId, int professorId, int groupId, int auditoryId) {
+        this.id = NO_ID;
+        this.courseId = courseId;
+        this.professorId = professorId;
+        this.groupId = groupId;
+        this.auditoryId = auditoryId;
     }
 
     public Lesson(int id, int courseId, int professorId, int groupId, int auditoryId) {
