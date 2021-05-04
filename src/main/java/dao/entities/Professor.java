@@ -3,12 +3,19 @@ package dao.entities;
 import java.util.Objects;
 
 public class Professor {
+    private static final int NO_ID = 0;
 
     private int id;
     private String firstName;
     private String lastName;
 
     public Professor() {
+    }
+
+    public Professor(String firstName, String lastName) {
+        this.id = NO_ID;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Professor(int id, String firstName, String lastName) {
