@@ -20,6 +20,14 @@ public interface LessonService extends Service<Lesson> {
 
     void assignTime(Lesson lesson, Time time) throws ServiceException;
 
+    Auditory getAuditory(Lesson lesson) throws ServiceException;
+
+    Group getGroup(Lesson lesson) throws ServiceException;
+
+    Course getCourse(Lesson lesson) throws ServiceException;
+
+    Professor getProfessor(Lesson lesson) throws ServiceException;
+
     List<Lesson> getAllForTime(Time time) throws ServiceException;
 
     List<Lesson> getAllForGroupAndDate(Group group, Date date) throws ServiceException;
