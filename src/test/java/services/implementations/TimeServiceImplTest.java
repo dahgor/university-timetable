@@ -2,16 +2,21 @@ package services.implementations;
 
 import dao.DaoException;
 import dao.entities.Time;
+import dao.entities.TimePeriod;
 import dao.interfaces.TimeDao;
+import dao.interfaces.TimePeriodDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import services.ServiceException;
+import services.interfaces.TimeService;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TimeServiceTest {
+class TimeServiceImplTest {
     private static final String NULL_ERROR = "Null is passed";
     private static final String ID_ERROR = "Invalid id is passed";
     private static final int INVALID_ID = -1;
@@ -31,18 +36,20 @@ class TimeServiceTest {
 
     @Mock
     private TimeDao timeDao;
+    @Mock
+    private TimePeriodDao timePeriodDao;
 
     private TimeService timeService;
 
     @BeforeEach
     void prepareTimeService() throws ServiceException {
-        timeService = new TimeService(timeDao);
+        timeService = new TimeServiceImpl(timeDao, timePeriodDao);
     }
 
     @Test
     void shouldThrowServiceExceptionWhenNullIsPassedToConstructor() {
         Exception exception = assertThrows(ServiceException.class,
-                () -> new TimeService(null));
+                () -> new TimeServiceImpl(null, null));
         assertEquals(NULL_ERROR, exception.getMessage());
     }
 
@@ -64,6 +71,13 @@ class TimeServiceTest {
     void shouldThrowServiceExceptionWhenNullIsPassedToDeleteByIdMethod() {
         Exception exception = assertThrows(ServiceException.class,
                 () -> timeService.delete(null));
+        assertEquals(NULL_ERROR, exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowServiceExceptionWhenNullIsPassedToGetTimePeriodMethod() {
+        Exception exception = assertThrows(ServiceException.class,
+                () -> timeService.getTimePeriod(null));
         assertEquals(NULL_ERROR, exception.getMessage());
     }
 
@@ -113,6 +127,19 @@ class TimeServiceTest {
 
         verify(timeDao).findAllRecords();
         assertEquals(times, result);
+    }
+
+    @Test
+    void shouldReturnTimePeriod() throws DaoException, ServiceException {
+        Time time = new Time(1, DATE, TIME_PERIOD);
+        TimePeriod timePeriod = new TimePeriod(1, Timestamp.valueOf(LocalDateTime.now()),
+                Timestamp.valueOf(LocalDateTime.now()));
+        when(timePeriodDao.findById(time.getTimePeriodId())).thenReturn(timePeriod);
+
+        TimePeriod result = timeService.getTimePeriod(time);
+
+        verify(timePeriodDao).findById(time.getTimePeriodId());
+        assertEquals(timePeriod, result);
     }
 
 }
