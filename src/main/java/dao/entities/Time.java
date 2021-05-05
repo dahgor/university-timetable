@@ -4,12 +4,19 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class Time {
+    private static final int NO_ID = 0;
 
     private int id;
     private Date date;
     private int timePeriodId;
 
     public Time() {
+    }
+
+    public Time(Date date, int timePeriodId) {
+        this.id = NO_ID;
+        this.date = date;
+        this.timePeriodId = timePeriodId;
     }
 
     public Time(int id, Date date, int timePeriodId) {
