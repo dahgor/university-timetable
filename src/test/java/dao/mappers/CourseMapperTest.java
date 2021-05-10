@@ -1,55 +1,27 @@
 package dao.mappers;
 
-import dao.entities.Course;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class CourseMapperTest {
-    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTablesWithoutRelations.sql";
-
-    private JdbcTemplate jdbcTemplate;
-    private final Course course = new Course(1, "Math", "description");
-
-    @BeforeEach
-    void prepareJdbcAndDataSource() {
-        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript(INIT_SCRIPT_FILE)
-                .build();
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    void saveCourse(Course course) {
-        jdbcTemplate.update("insert into courses(course_name, course_description) values(?,?)",
-                course.getName(), course.getDescription());
-    }
+    @Mock
+    private ResultSet resultSet;
+    private CourseMapper courseMapper = new CourseMapper();
 
     @Test
     void shouldTransformResultSetIntoEntityClassWhenDataIsProvided() throws Exception {
-        saveCourse(course);
-        Connection connection = jdbcTemplate.getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from courses");
+        courseMapper.mapRow(resultSet, 1);
 
-        Course result = null;
-        if (resultSet.next()) {
-            result = new CourseMapper().mapRow(resultSet, 1);
-        }
-
-        assertEquals(course, result);
-
-        resultSet.close();
-        statement.close();
-        connection.close();
+        verify(resultSet).getInt("course_id");
+        verify(resultSet).getString("course_name");
+        verify(resultSet).getString("course_description");
     }
 
 }
