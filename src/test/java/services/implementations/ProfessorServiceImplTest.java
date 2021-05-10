@@ -47,20 +47,6 @@ class ProfessorServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenNullIsPassedToSetProfessorDaoMethod() {
-        Exception exception = assertThrows(ServiceException.class,
-                () -> new ProfessorServiceImpl().setProfessorDao(null));
-        assertEquals(NULL_ERROR, exception.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenNullIsPassedToSetCourseDaoMethod() {
-        Exception exception = assertThrows(ServiceException.class,
-                () -> new ProfessorServiceImpl().setCourseDao(null));
-        assertEquals(NULL_ERROR, exception.getMessage());
-    }
-
-    @Test
     void shouldThrowExceptionWhenNullIsPassedToSaveMethod() {
         Exception exception = assertThrows(ServiceException.class,
                 () -> professorService.save(null));
