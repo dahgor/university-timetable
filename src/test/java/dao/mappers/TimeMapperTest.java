@@ -1,57 +1,43 @@
 package dao.mappers;
 
 import dao.entities.Time;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class TimeMapperTest {
-    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTablesWithoutRelations.sql";
+    private static final int TIME_ID = 1;
+    private static final int TIME_PERIOD_ID = 2;
+    private static final Date DATE = Date.valueOf(LocalDate.now());
 
-    private JdbcTemplate jdbcTemplate;
-    private final Time time = new Time(1, Date.valueOf(LocalDate.now()), 1);
-
-    @BeforeEach
-    void prepareJdbcAndDataSource() {
-        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript(INIT_SCRIPT_FILE)
-                .build();
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    void saveTime(Time time) {
-        jdbcTemplate.update("insert into times(date, time_period_id) values (?,?)",
-                time.getDate(), time.getTimePeriodId());
-    }
+    @Mock
+    private ResultSet resultSet;
+    private TimeMapper timeMapper = new TimeMapper();
 
     @Test
     void shouldTransformResultSetIntoEntityClassWhenDataIsProvided() throws Exception {
-        saveTime(time);
-        Connection connection = jdbcTemplate.getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from times");
+        when(resultSet.getInt("time_id")).thenReturn(TIME_ID);
+        when(resultSet.getDate("date")).thenReturn(DATE);
+        when(resultSet.getInt("time_period_id")).thenReturn(TIME_PERIOD_ID);
 
-        Time result = null;
-        if (resultSet.next()) {
-            result = new TimeMapper().mapRow(resultSet, 1);
-        }
+        Time result = timeMapper.mapRow(resultSet, 1);
 
-        assertEquals(time, result);
-
-        resultSet.close();
-        statement.close();
-        connection.close();
+        verify(resultSet).getInt("time_id");
+        verify(resultSet).getDate("date");
+        verify(resultSet).getInt("time_period_id");
+        assertEquals(TIME_ID, result.getId());
+        assertEquals(TIME_PERIOD_ID, result.getTimePeriodId());
+        assertEquals(DATE, result.getDate());
     }
 
 }

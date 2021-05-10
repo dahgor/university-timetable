@@ -1,55 +1,36 @@
 package dao.mappers;
 
 import dao.entities.Group;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GroupMapperTest {
-    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTablesWithoutRelations.sql";
+    private static final int GROUP_ID = 1;
+    private static final String GROUP_NAME = "ME-15";
 
-    private JdbcTemplate jdbcTemplate;
-    private final Group group = new Group(1, "ME-15");
-
-    @BeforeEach
-    void prepareJdbcAndDataSource() {
-        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript(INIT_SCRIPT_FILE)
-                .build();
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    void saveGroup(Group group) {
-        jdbcTemplate.update("insert into groups(group_name) values(?)", group.getName());
-    }
+    @Mock
+    private ResultSet resultSet;
+    private GroupMapper groupMapper = new GroupMapper();
 
     @Test
     void shouldTransformResultSetIntoEntityClassWhenDataIsProvided() throws Exception {
-        saveGroup(group);
-        Connection connection = jdbcTemplate.getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from groups");
+        when(resultSet.getInt("group_id")).thenReturn(GROUP_ID);
+        when(resultSet.getString("group_name")).thenReturn(GROUP_NAME);
 
-        Group result = null;
-        if (resultSet.next()) {
-            result = new GroupMapper().mapRow(resultSet, 1);
-        }
+        Group result = groupMapper.mapRow(resultSet, 1);
 
-        assertEquals(group, result);
-
-        resultSet.close();
-        statement.close();
-        connection.close();
+        verify(resultSet).getInt("group_id");
+        verify(resultSet).getString("group_name");
+        assertEquals(GROUP_ID, result.getId());
+        assertEquals(GROUP_NAME, result.getName());
     }
-
-
 }

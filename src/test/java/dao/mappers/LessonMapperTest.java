@@ -1,56 +1,49 @@
 package dao.mappers;
 
 import dao.entities.Lesson;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class LessonMapperTest {
-    private static final String INIT_SCRIPT_FILE = "classpath:sqlScripts/CreateTablesWithoutRelations.sql";
+    private static final int LESSON_ID = 1;
+    private static final int AUDITORY_ID = 2;
+    private static final int GROUP_ID = 3;
+    private static final int COURSE_ID = 4;
+    private static final int PROFESSOR_ID = 5;
 
-    private JdbcTemplate jdbcTemplate;
-    private final Lesson lesson = new Lesson(1, 1, 1, 1, 1);
-
-    @BeforeEach
-    void prepareJdbcAndDataSource() {
-        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript(INIT_SCRIPT_FILE)
-                .build();
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    void saveLesson(Lesson lesson) {
-        jdbcTemplate.update("insert into lessons(course_id, professor_id, group_id, auditory_id) " +
-                        "values (?,?,?,?)", lesson.getCourseId(), lesson.getProfessorId(), lesson.getGroupId(),
-                lesson.getAuditoryId());
-    }
+    @Mock
+    private ResultSet resultSet;
+    private LessonMapper lessonMapper = new LessonMapper();
 
     @Test
     void shouldTransformResultSetIntoEntityClassWhenDataIsProvided() throws Exception {
-        saveLesson(lesson);
-        Connection connection = jdbcTemplate.getDataSource().getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from lessons");
+        when(resultSet.getInt("lesson_id")).thenReturn(LESSON_ID);
+        when(resultSet.getInt("group_id")).thenReturn(GROUP_ID);
+        when(resultSet.getInt("course_id")).thenReturn(COURSE_ID);
+        when(resultSet.getInt("auditory_id")).thenReturn(AUDITORY_ID);
+        when(resultSet.getInt("professor_id")).thenReturn(PROFESSOR_ID);
 
-        Lesson result = null;
-        if (resultSet.next()) {
-            result = new LessonMapper().mapRow(resultSet, 1);
-        }
+        Lesson result = lessonMapper.mapRow(resultSet, 1);
 
-        assertEquals(lesson, result);
-
-        resultSet.close();
-        statement.close();
-        connection.close();
+        verify(resultSet).getInt("lesson_id");
+        verify(resultSet).getInt("group_id");
+        verify(resultSet).getInt("course_id");
+        verify(resultSet).getInt("auditory_id");
+        verify(resultSet).getInt("professor_id");
+        assertEquals(LESSON_ID, result.getId());
+        assertEquals(AUDITORY_ID, result.getAuditoryId());
+        assertEquals(GROUP_ID, result.getGroupId());
+        assertEquals(COURSE_ID, result.getCourseId());
+        assertEquals(PROFESSOR_ID, result.getProfessorId());
     }
 
 }
