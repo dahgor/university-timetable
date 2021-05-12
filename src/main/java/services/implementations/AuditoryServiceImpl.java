@@ -3,6 +3,8 @@ package services.implementations;
 import dao.DaoException;
 import dao.entities.Auditory;
 import dao.implementations.AuditoryDaoImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.ServiceException;
@@ -15,6 +17,8 @@ public class AuditoryServiceImpl implements AuditoryService {
     private static final String DAO_ERROR = "Dao error";
     private static final String NULL_ERROR = "Null is passed";
     private static final String ID_ERROR = "Invalid id is passed";
+
+    private static final Logger logger = LoggerFactory.getLogger(AuditoryServiceImpl.class);
 
     private AuditoryDaoImpl auditoryDao;
 
@@ -31,6 +35,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public Auditory save(Auditory item) throws ServiceException {
+        logger.info("Saving to database {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -44,6 +49,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public void delete(Auditory item) throws ServiceException {
+        logger.info("Deleting from database {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -56,6 +62,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public Auditory findById(int id) throws ServiceException {
+        logger.info("Retrieving from database item with id #{}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -68,6 +75,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public List<Auditory> getAllItems() throws ServiceException {
+        logger.info("Retrieving all items from database");
         try {
             return auditoryDao.findAllRecords();
         } catch (DaoException e) {
@@ -77,6 +85,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public void changeLocation(Auditory auditory, String newLocation) throws ServiceException {
+        logger.info("Changing location for {}. New Location: {}", auditory, newLocation);
         if (auditory == null || newLocation == null) {
             throw new ServiceException(NULL_ERROR);
         }
