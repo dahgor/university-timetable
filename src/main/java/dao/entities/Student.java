@@ -77,7 +77,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "StudentEntity{" +
+        return "Student{" +
                 "id=" + id +
                 ", groupId=" + groupId +
                 ", firstName='" + firstName + '\'' +

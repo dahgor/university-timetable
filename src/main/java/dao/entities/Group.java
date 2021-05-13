@@ -51,7 +51,7 @@ public class Group {
 
     @Override
     public String toString() {
-        return "GroupEntity{" +
+        return "Group{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

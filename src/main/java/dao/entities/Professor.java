@@ -65,7 +65,7 @@ public class Professor {
 
     @Override
     public String toString() {
-        return "ProfessorEntity{" +
+        return "Professor{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
