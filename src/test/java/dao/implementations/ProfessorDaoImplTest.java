@@ -39,17 +39,17 @@ class ProfessorDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void prepareDataForAssigning() {
+    private void prepareDataForAssigning() {
         jdbcTemplate.execute("insert into courses(course_name, course_description) " +
                 "VALUES ('Math', 'description')");
     }
 
-    void saveProfessor(Professor professor) {
+    private void saveProfessor(Professor professor) {
         jdbcTemplate.update("insert into professors(first_name, last_name) values (?, ?)",
                 professor.getFirstName(), professor.getLastName());
     }
 
-    void assignProfessorToCourse(int professorId, int courseId) {
+    private void assignProfessorToCourse(int professorId, int courseId) {
         jdbcTemplate.update("insert into professor_course(professor_id, course_id) values(?, ?)",
                 professorId, courseId);
     }

@@ -47,17 +47,17 @@ class TimeDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void saveTime(Time time) {
+    private void saveTime(Time time) {
         jdbcTemplate.update("insert into times(date, time_period_id) values (?, ?)",
                 time.getDate(), time.getTimePeriodId());
     }
 
-    void createTimePeriod() {
+    private void createTimePeriod() {
         jdbcTemplate.update("insert into time_periods(start_hour, end_hour) " +
                 "VALUES (?, ?)", TIMESTAMP, TIMESTAMP);
     }
 
-    void createLesson() {
+    private void createLesson() {
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
         jdbcTemplate.execute("insert into courses(course_name, course_description) " +
                 "VALUES ('Math', 'description')");
@@ -68,7 +68,7 @@ class TimeDaoImplTest {
                 "VALUES (1, 1, 1, 1)");
     }
 
-    void assignLessonToTime(int lessonId, int timeId) {
+    private void assignLessonToTime(int lessonId, int timeId) {
         jdbcTemplate.update("insert into schedule(time_id, lesson_id) VALUES (?, ?)",
                 timeId, lessonId);
     }

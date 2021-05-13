@@ -39,16 +39,16 @@ class StudentDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void prepareGroup() {
+    private void prepareGroup() {
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
     }
 
-    void prepareTwoGroups() {
+    private void prepareTwoGroups() {
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-15')");
         jdbcTemplate.execute("insert into groups(group_name) VALUES ('ME-16')");
     }
 
-    void saveStudent(Student student) {
+    private void saveStudent(Student student) {
         jdbcTemplate.update("insert into students(group_id, first_name, last_name) values (?, ?, ?)",
                 student.getGroupId(), student.getFirstName(), student.getLastName());
     }
