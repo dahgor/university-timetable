@@ -5,6 +5,8 @@ import dao.DaoProperties;
 import dao.entities.Student;
 import dao.interfaces.StudentDao;
 import dao.mappers.StudentMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,8 @@ import java.util.List;
 public class StudentDaoImpl implements StudentDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id is passed";
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
 
     private JdbcTemplate jdbc;
     private DaoProperties queries;
@@ -47,6 +51,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public int save(Student student) throws DaoException {
+        logger.debug("Saving to database, item = {}", student);
         if (student == null) {
             throw new DaoException(NULL_ERROR);
         }
@@ -60,16 +65,17 @@ public class StudentDaoImpl implements StudentDao {
             ps.setInt(3, student.getGroupId());
             return ps;
         }, keyHolder);
-
-        try {
-            return keyHolder.getKey().intValue();
-        } catch (NullPointerException exception) {
-            throw new DaoException("Null is returned as an id from database");
+        if (keyHolder.getKey() == null) {
+            throw new DaoException("Failed to get generated id from database");
         }
+        int generatedId = keyHolder.getKey().intValue();
+        logger.debug("Generated id for {} is {}", student, generatedId);
+        return generatedId;
     }
 
     @Override
     public void deleteById(int id) throws DaoException {
+        logger.debug("Deleting from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -78,6 +84,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student findById(int id) throws DaoException {
+        logger.debug("Retrieving from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -87,11 +94,13 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> findAllRecords() throws DaoException {
+        logger.debug("Retrieving all items from database");
         return jdbc.query(queries.getQuery("findAllRecords"), new StudentMapper());
     }
 
     @Override
     public void changeGroup(int studentId, int groupId) throws DaoException {
+        logger.debug("Changing group, item id = {}, new group id = {}", studentId, groupId);
         if (studentId <= 0 || groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -100,6 +109,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void changeFirstName(int studentId, String newFirstName) throws DaoException {
+        logger.debug("Changing first name, item id = {}, new name = {}", studentId, newFirstName);
         if (studentId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -111,6 +121,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void changeLastName(int studentId, String newLastName) throws DaoException {
+        logger.debug("Changing last name, item id = {}, new name = {}", studentId, newLastName);
         if (studentId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -122,10 +133,10 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> findByGroup(int groupId) throws DaoException {
+        logger.debug("Retrieving items by group, group id = {}", groupId);
         if (groupId <= 0) {
             throw new DaoException(ID_ERROR);
         }
-
         return jdbc.query(queries.getQuery("findByGroup"), new Object[]{groupId},
                 new StudentMapper());
     }

@@ -51,7 +51,7 @@ public class AuditoryDaoImpl implements AuditoryDao {
 
     @Override
     public int save(Auditory auditory) throws DaoException {
-        logger.debug("Saving {} to database", auditory);
+        logger.debug("Saving to database, item = {}", auditory);
         if (auditory == null) {
             throw new DaoException(NULL_ERROR);
         }
@@ -67,13 +67,13 @@ public class AuditoryDaoImpl implements AuditoryDao {
             throw new DaoException("Failed to get generated id from database");
         }
         int generatedId = keyHolder.getKey().intValue();
-        logger.debug("Generated id for {} is #{}", auditory, generatedId);
+        logger.debug("Generated id for {} is {}", auditory, generatedId);
         return generatedId;
     }
 
     @Override
     public void deleteById(int id) throws DaoException {
-        logger.debug("Deleting item with id #{}", id);
+        logger.debug("Deleting from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -82,7 +82,7 @@ public class AuditoryDaoImpl implements AuditoryDao {
 
     @Override
     public Auditory findById(int id) throws DaoException {
-        logger.debug("Retrieving from database item with id #{}", id);
+        logger.debug("Retrieving from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -100,7 +100,7 @@ public class AuditoryDaoImpl implements AuditoryDao {
 
     @Override
     public void changeLocation(int auditoryId, String newLocation) throws DaoException {
-        logger.debug("Changing location. Item id = {}, new location = {}", auditoryId, newLocation);
+        logger.debug("Changing location, item id = {}, new location = {}", auditoryId, newLocation);
         if (auditoryId <= 0) {
             throw new DaoException(ID_ERROR);
         }
