@@ -35,41 +35,45 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public Auditory save(Auditory item) throws ServiceException {
-        logger.info("Saving {}", item);
+        logger.info("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
         try {
             int generatedId = auditoryDao.save(item);
+            logger.debug("Generated id for {} is {}", item, generatedId);
             return new Auditory(generatedId, item.getLocation());
         } catch (DaoException e) {
-            throw new ServiceException(DAO_ERROR);
+            logger.warn("Failed to save item: {}", item, e);
+            throw new ServiceException(DAO_ERROR, e);
         }
     }
 
     @Override
     public void delete(Auditory item) throws ServiceException {
-        logger.info("Deleting {}", item);
+        logger.info("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
         try {
             auditoryDao.deleteById(item.getId());
         } catch (DaoException e) {
-            throw new ServiceException(DAO_ERROR);
+            logger.warn("Failed to delete item: {}", item, e);
+            throw new ServiceException(DAO_ERROR, e);
         }
     }
 
     @Override
     public Auditory findById(int id) throws ServiceException {
-        logger.info("Retrieving item with id #{}", id);
+        logger.info("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
         try {
             return auditoryDao.findById(id);
         } catch (DaoException e) {
-            throw new ServiceException(DAO_ERROR);
+            logger.warn("Failed to retrieve item by id: {}", id, e);
+            throw new ServiceException(DAO_ERROR, e);
         }
     }
 
@@ -79,19 +83,21 @@ public class AuditoryServiceImpl implements AuditoryService {
         try {
             return auditoryDao.findAllRecords();
         } catch (DaoException e) {
-            throw new ServiceException(DAO_ERROR);
+            logger.warn("Failed to retrieve all items");
+            throw new ServiceException(DAO_ERROR, e);
         }
     }
 
     @Override
     public void changeLocation(Auditory auditory, String newLocation) throws ServiceException {
-        logger.info("Changing auditory's location");
+        logger.info("Changing auditory's location, auditory = {}, new location = {}", auditory, newLocation);
         if (auditory == null || newLocation == null) {
             throw new ServiceException(NULL_ERROR);
         }
         try {
             auditoryDao.changeLocation(auditory.getId(), newLocation);
         } catch (DaoException e) {
+            logger.warn("Failed to change location, item = {}, new location = {}", auditory, newLocation, e);
             throw new ServiceException(DAO_ERROR, e);
         }
     }
