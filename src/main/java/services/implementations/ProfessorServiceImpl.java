@@ -166,13 +166,13 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
-    public void getCourseList(Professor professor) throws ServiceException {
+    public List<Course> getCourseList(Professor professor) throws ServiceException {
         logger.info("Retrieving professor's courses, professor = {}", professor);
         if (professor == null) {
             throw new ServiceException(NULL_ERROR);
         }
         try {
-            courseDao.findByProfessor(professor.getId());
+            return courseDao.findByProfessor(professor.getId());
         } catch (DaoException e) {
             logger.warn("Failed to retrieve professor's courses, professor = {}", professor, e);
             throw new ServiceException(DAO_ERROR, e);

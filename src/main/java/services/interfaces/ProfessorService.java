@@ -4,6 +4,8 @@ import dao.entities.Course;
 import dao.entities.Professor;
 import services.ServiceException;
 
+import java.util.List;
+
 public interface ProfessorService extends Service<Professor> {
 
     void changeFirstName(Professor professor, String newName) throws ServiceException;
@@ -14,5 +16,5 @@ public interface ProfessorService extends Service<Professor> {
 
     void deleteCourse(Professor professor, Course course) throws ServiceException;
 
-    void getCourseList(Professor professor) throws ServiceException;
+    List<Course> getCourseList(Professor professor) throws ServiceException;
 }
