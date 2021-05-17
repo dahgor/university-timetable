@@ -33,7 +33,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public TimePeriod save(TimePeriod item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -49,7 +49,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public void delete(TimePeriod item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -63,7 +63,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public TimePeriod findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -77,7 +77,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public List<TimePeriod> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return timePeriodDao.findAllRecords();
         } catch (DaoException e) {
@@ -88,7 +88,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public void changeStartHour(TimePeriod timePeriod, Timestamp newTime) throws ServiceException {
-        logger.info("Changing time period's start hour, time period = {}, new time = {}",
+        logger.debug("Changing time period's start hour, time period = {}, new time = {}",
                 timePeriod, newTime);
         if (timePeriod == null || newTime == null) {
             throw new ServiceException(NULL_ERROR);
@@ -104,7 +104,7 @@ public class TimePeriodServiceImpl implements TimePeriodService {
 
     @Override
     public void changeEndHour(TimePeriod timePeriod, Timestamp newTime) throws ServiceException {
-        logger.info("Changing time period's end hour, time period = {}, new time = {}",
+        logger.debug("Changing time period's end hour, time period = {}, new time = {}",
                 timePeriod, newTime);
         if (timePeriod == null || newTime == null) {
             throw new ServiceException(NULL_ERROR);

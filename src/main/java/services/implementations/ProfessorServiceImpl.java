@@ -54,7 +54,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public Professor save(Professor item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -70,7 +70,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void delete(Professor item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -84,7 +84,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public Professor findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -98,7 +98,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public List<Professor> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return professorDao.findAllRecords();
         } catch (DaoException e) {
@@ -109,7 +109,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void changeFirstName(Professor professor, String newName) throws ServiceException {
-        logger.info("Changing professor's first name, professor = {}, new name = {}", professor, newName);
+        logger.debug("Changing professor's first name, professor = {}, new name = {}", professor, newName);
         if (professor == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -123,7 +123,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void changeLastName(Professor professor, String newName) throws ServiceException {
-        logger.info("Changing professor's last name, professor = {}, new name = {}", professor, newName);
+        logger.debug("Changing professor's last name, professor = {}, new name = {}", professor, newName);
         if (professor == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -137,7 +137,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void addCourse(Professor professor, Course course) throws ServiceException {
-        logger.info("Assigning professor to course, professor = {}, course = {}", professor, course);
+        logger.debug("Assigning professor to course, professor = {}, course = {}", professor, course);
         if (professor == null || course == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -152,7 +152,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void deleteCourse(Professor professor, Course course) throws ServiceException {
-        logger.info("Deleting professor from course, professor = {}, course = {}", professor, course);
+        logger.debug("Deleting professor from course, professor = {}, course = {}", professor, course);
         if (professor == null || course == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -167,7 +167,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public List<Course> getCourseList(Professor professor) throws ServiceException {
-        logger.info("Retrieving professor's courses, professor = {}", professor);
+        logger.debug("Retrieving professor's courses, professor = {}", professor);
         if (professor == null) {
             throw new ServiceException(NULL_ERROR);
         }

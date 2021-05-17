@@ -57,7 +57,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void changeName(Group group, String newName) throws ServiceException {
-        logger.info("Changing group's name, group = {}, new name = {}", group, newName);
+        logger.debug("Changing group's name, group = {}, new name = {}", group, newName);
         if (group == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -71,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addCourse(Group group, Course course) throws ServiceException {
-        logger.info("Assigning group to course, group = {}, course = {}", group, course);
+        logger.debug("Assigning group to course, group = {}, course = {}", group, course);
         if (group == null || course == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -85,7 +85,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteCourse(Group group, Course course) throws ServiceException {
-        logger.info("Deleting group from course, group = {}, course = {}", group, course);
+        logger.debug("Deleting group from course, group = {}, course = {}", group, course);
         if (group == null || course == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -100,7 +100,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Course> getCourseList(Group group) throws ServiceException {
-        logger.info("Retrieving list of courses by group, group = {}", group);
+        logger.debug("Retrieving list of courses by group, group = {}", group);
         if (group == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -114,7 +114,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Student> getStudentList(Group group) throws ServiceException {
-        logger.info("Retrieving list of students by group, group = {}", group);
+        logger.debug("Retrieving list of students by group, group = {}", group);
         if (group == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -128,7 +128,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group save(Group item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -147,7 +147,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void delete(Group item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -161,7 +161,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -175,7 +175,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return groupDao.findAllRecords();
         } catch (DaoException e) {

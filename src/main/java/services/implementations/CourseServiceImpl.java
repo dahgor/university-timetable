@@ -58,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course save(Course item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -74,7 +74,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void delete(Course item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -88,7 +88,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -102,7 +102,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return courseDao.findAllRecords();
         } catch (DaoException e) {
@@ -113,7 +113,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void changeName(Course course, String newName) throws ServiceException {
-        logger.info("Changing course's name, course = {}, new name = {}", course, newName);
+        logger.debug("Changing course's name, course = {}, new name = {}", course, newName);
         if (course == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -127,7 +127,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void changeDescription(Course course, String newDescription) throws ServiceException {
-        logger.info("Changing course's description, course = {}, new description = {}", course, newDescription);
+        logger.debug("Changing course's description, course = {}, new description = {}", course, newDescription);
         if (course == null || newDescription == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -141,7 +141,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Professor> getProfessorList(Course course) throws ServiceException {
-        logger.info("Retrieving list of professors by course, course = {}", course);
+        logger.debug("Retrieving list of professors by course, course = {}", course);
         if (course == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -155,7 +155,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Group> getGroupList(Course course) throws ServiceException {
-        logger.info("Retrieving list of groups by course, course = {}", course);
+        logger.debug("Retrieving list of groups by course, course = {}", course);
         if (course == null) {
             throw new ServiceException(NULL_ERROR);
         }

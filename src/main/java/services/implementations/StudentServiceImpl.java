@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void changeFirstName(Student student, String newName) throws ServiceException {
-        logger.info("Changing student's first name, student = {}, new name = {}", student, newName);
+        logger.debug("Changing student's first name, student = {}, new name = {}", student, newName);
         if (student == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void changeLastName(Student student, String newName) throws ServiceException {
-        logger.info("Changing student's last name, student = {}, new name = {}", student, newName);
+        logger.debug("Changing student's last name, student = {}, new name = {}", student, newName);
         if (student == null || newName == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -76,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void changeGroup(Student student, Group newGroup) throws ServiceException {
-        logger.info("Changing student's group, student = {}, new group = {}", student, groupDao);
+        logger.debug("Changing student's group, student = {}, new group = {}", student, groupDao);
         if (student == null || newGroup == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -91,7 +91,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Group getGroup(Student student) throws ServiceException {
-        logger.info("Retrieving student's group, student = {}", student);
+        logger.debug("Retrieving student's group, student = {}", student);
         if (student == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -105,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student save(Student item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -126,7 +126,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Student item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -140,7 +140,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -154,7 +154,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return studentDao.findAllRecords();
         } catch (DaoException e) {

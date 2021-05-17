@@ -35,7 +35,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public Auditory save(Auditory item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -51,7 +51,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public void delete(Auditory item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -65,7 +65,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public Auditory findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -79,7 +79,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public List<Auditory> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return auditoryDao.findAllRecords();
         } catch (DaoException e) {
@@ -90,7 +90,7 @@ public class AuditoryServiceImpl implements AuditoryService {
 
     @Override
     public void changeLocation(Auditory auditory, String newLocation) throws ServiceException {
-        logger.info("Changing auditory's location, auditory = {}, new location = {}", auditory, newLocation);
+        logger.debug("Changing auditory's location, auditory = {}, new location = {}", auditory, newLocation);
         if (auditory == null || newLocation == null) {
             throw new ServiceException(NULL_ERROR);
         }

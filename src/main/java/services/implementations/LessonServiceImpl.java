@@ -70,7 +70,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Lesson save(Lesson item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -92,7 +92,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void delete(Lesson item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -106,7 +106,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Lesson findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -120,7 +120,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return lessonDao.findAllRecords();
         } catch (DaoException e) {
@@ -131,7 +131,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void changeAuditory(Lesson lesson, Auditory newAuditory) throws ServiceException {
-        logger.info("Changing lesson's auditory, lesson = {}, new auditory = {}",
+        logger.debug("Changing lesson's auditory, lesson = {}, new auditory = {}",
                 lesson, newAuditory);
         if (lesson == null || newAuditory == null) {
             throw new ServiceException(NULL_ERROR);
@@ -147,7 +147,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void changeGroup(Lesson lesson, Group newGroup) throws ServiceException {
-        logger.info("Changing lesson's group, lesson = {}, new group = {}",
+        logger.debug("Changing lesson's group, lesson = {}, new group = {}",
                 lesson, newGroup);
         if (lesson == null || newGroup == null) {
             throw new ServiceException(NULL_ERROR);
@@ -163,7 +163,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void changeProfessor(Lesson lesson, Professor newProfessor) throws ServiceException {
-        logger.info("Changing lesson's professor, lesson = {}, new professor = {}",
+        logger.debug("Changing lesson's professor, lesson = {}, new professor = {}",
                 lesson, newProfessor);
         if (lesson == null || newProfessor == null) {
             throw new ServiceException(NULL_ERROR);
@@ -179,7 +179,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void changeCourse(Lesson lesson, Course newCourse) throws ServiceException {
-        logger.info("Changing lesson's course, lesson = {}, new course = {}",
+        logger.debug("Changing lesson's course, lesson = {}, new course = {}",
                 lesson, newCourse);
         if (lesson == null || newCourse == null) {
             throw new ServiceException(NULL_ERROR);
@@ -195,7 +195,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void changeTime(Lesson lesson, Time newTime) throws ServiceException {
-        logger.info("Changing lesson's time, lesson = {}, new time = {}",
+        logger.debug("Changing lesson's time, lesson = {}, new time = {}",
                 lesson, newTime);
         if (lesson == null || newTime == null) {
             throw new ServiceException(NULL_ERROR);
@@ -211,7 +211,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void assignTime(Lesson lesson, Time time) throws ServiceException {
-        logger.info("Assigning lesson to time, lesson = {}, time = {}",
+        logger.debug("Assigning lesson to time, lesson = {}, time = {}",
                 lesson, time);
         if (lesson == null || time == null) {
             throw new ServiceException(NULL_ERROR);
@@ -227,7 +227,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Auditory getAuditory(Lesson lesson) throws ServiceException {
-        logger.info("Retrieving lesson's auditory, lesson = {}", lesson);
+        logger.debug("Retrieving lesson's auditory, lesson = {}", lesson);
         if (lesson == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -241,7 +241,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Group getGroup(Lesson lesson) throws ServiceException {
-        logger.info("Retrieving lesson's group, lesson = {}", lesson);
+        logger.debug("Retrieving lesson's group, lesson = {}", lesson);
         if (lesson == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -255,7 +255,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Course getCourse(Lesson lesson) throws ServiceException {
-        logger.info("Retrieving lesson's course, lesson = {}", lesson);
+        logger.debug("Retrieving lesson's course, lesson = {}", lesson);
         if (lesson == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -269,7 +269,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Professor getProfessor(Lesson lesson) throws ServiceException {
-        logger.info("Retrieving lesson's professor, lesson = {}", lesson);
+        logger.debug("Retrieving lesson's professor, lesson = {}", lesson);
         if (lesson == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -283,7 +283,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllForTime(Time time) throws ServiceException {
-        logger.info("Retrieving items by time, time = {}", time);
+        logger.debug("Retrieving items by time, time = {}", time);
         if (time == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -297,7 +297,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllForGroupAndDate(Group group, Date date) throws ServiceException {
-        logger.info("Retrieving items by group and date, group = {}, date = {}", group, date);
+        logger.debug("Retrieving items by group and date, group = {}, date = {}", group, date);
         if (group == null || date == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -312,7 +312,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllForGroupAndMonth(Group group, Date month) throws ServiceException {
-        logger.info("Retrieving items by group and month, group = {}, month = {}", group, month);
+        logger.debug("Retrieving items by group and month, group = {}, month = {}", group, month);
         if (group == null || month == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -327,7 +327,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllForProfessorAndDate(Professor professor, Date date) throws ServiceException {
-        logger.info("Retrieving items by professor and date, professor = {}, date = {}", professor, date);
+        logger.debug("Retrieving items by professor and date, professor = {}, date = {}", professor, date);
         if (professor == null || date == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -342,7 +342,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<Lesson> getAllForProfessorAndMonth(Professor professor, Date month) throws ServiceException {
-        logger.info("Retrieving items by professor and month, professor = {}, month = {}", professor, month);
+        logger.debug("Retrieving items by professor and month, professor = {}, month = {}", professor, month);
         if (professor == null || month == null) {
             throw new ServiceException(NULL_ERROR);
         }

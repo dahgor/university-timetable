@@ -39,7 +39,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public Time save(Time item) throws ServiceException {
-        logger.info("Saving item: {}", item);
+        logger.debug("Saving item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -55,7 +55,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public void delete(Time item) throws ServiceException {
-        logger.info("Deleting item: {}", item);
+        logger.debug("Deleting item: {}", item);
         if (item == null) {
             throw new ServiceException(NULL_ERROR);
         }
@@ -69,7 +69,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public Time findById(int id) throws ServiceException {
-        logger.info("Retrieving item by id, id = {}", id);
+        logger.debug("Retrieving item by id, id = {}", id);
         if (id <= 0) {
             throw new ServiceException(ID_ERROR);
         }
@@ -83,7 +83,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public List<Time> getAllItems() throws ServiceException {
-        logger.info("Retrieving all items");
+        logger.debug("Retrieving all items");
         try {
             return timeDao.findAllRecords();
         } catch (DaoException e) {
@@ -94,7 +94,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public TimePeriod getTimePeriod(Time time) throws ServiceException {
-        logger.info("Retrieving time period of time, time = {}", time);
+        logger.debug("Retrieving time period of time, time = {}", time);
         if (time == null) {
             throw new ServiceException(NULL_ERROR);
         }
