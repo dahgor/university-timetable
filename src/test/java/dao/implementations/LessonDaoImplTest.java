@@ -44,18 +44,18 @@ class LessonDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void saveLesson(Lesson lesson) {
+    private void saveLesson(Lesson lesson) {
         jdbcTemplate.update("insert into lessons(course_id, professor_id, group_id, auditory_id) " +
                         "values (?, ?, ?, ?)", lesson.getCourseId(), lesson.getProfessorId(),
                 lesson.getGroupId(), lesson.getAuditoryId());
     }
 
-    void assignLessonToTime(int lessonId, int timeId) {
+    private void assignLessonToTime(int lessonId, int timeId) {
         jdbcTemplate.update("insert into schedule(lesson_id, time_id) values (?, ?)",
                 lessonId, timeId);
     }
 
-    void prepareDataForOneLesson() {
+    private void prepareDataForOneLesson() {
         jdbcTemplate.execute(
                 "insert into courses(course_name, course_description) VALUES ('math', 'description')");
         jdbcTemplate.execute("insert into professors(first_name, last_name) VALUES ('Alan', 'Smith')");
@@ -63,7 +63,7 @@ class LessonDaoImplTest {
         jdbcTemplate.execute("insert into auditories(auditory_location) VALUES ('1st floor')");
     }
 
-    void prepareDataForTwoLessons() {
+    private void prepareDataForTwoLessons() {
         prepareDataForOneLesson();
         jdbcTemplate.execute(
                 "insert into courses(course_name, course_description) VALUES ('biology', 'description')");
@@ -72,7 +72,7 @@ class LessonDaoImplTest {
         jdbcTemplate.execute("insert into auditories(auditory_location) VALUES ('2nd floor')");
     }
 
-    void prepareDataForAssigning() {
+    private void prepareDataForAssigning() {
         jdbcTemplate.update("insert into time_periods(start_hour, end_hour) VALUES (?, ?)",
                 Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
         jdbcTemplate.update("insert into times(date, time_period_id) VALUES (?, ?)",

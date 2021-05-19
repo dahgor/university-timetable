@@ -5,6 +5,8 @@ import dao.DaoProperties;
 import dao.entities.Professor;
 import dao.interfaces.ProfessorDao;
 import dao.mappers.ProfessorMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,8 @@ import java.util.List;
 public class ProfessorDaoImpl implements ProfessorDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id passed";
+
+    private static final Logger logger = LoggerFactory.getLogger(ProfessorDaoImpl.class);
 
     private JdbcTemplate jdbc;
     private DaoProperties queries;
@@ -47,6 +51,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public int save(Professor professor) throws DaoException {
+        logger.debug("Saving to database, item = {}", professor);
         if (professor == null) {
             throw new DaoException(NULL_ERROR);
         }
@@ -59,12 +64,17 @@ public class ProfessorDaoImpl implements ProfessorDao {
             ps.setString(2, professor.getLastName());
             return ps;
         }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+        if (keyHolder.getKey() == null) {
+            throw new DaoException("Failed to get generated id from database");
+        }
+        int generatedId = keyHolder.getKey().intValue();
+        logger.debug("Generated id for {} is {}", professor, generatedId);
+        return generatedId;
     }
 
     @Override
     public void deleteById(int id) throws DaoException {
+        logger.debug("Deleting from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -73,6 +83,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public Professor findById(int id) throws DaoException {
+        logger.debug("Retrieving from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -84,11 +95,13 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public List<Professor> findAllRecords() throws DaoException {
+        logger.debug("Retrieving all items from database");
         return jdbc.query(queries.getQuery("findAllRecords"), new ProfessorMapper());
     }
 
     @Override
     public List<Professor> findByCourse(int courseId) throws DaoException {
+        logger.debug("Retrieving items by course, course id = {}", courseId);
         if (courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -98,6 +111,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void changeFirstName(int professorId, String newFirstName) throws DaoException {
+        logger.debug("Changing first name, item id = {}, new name = {}", professorId, newFirstName);
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -109,6 +123,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void changeLastName(int professorId, String newLastName) throws DaoException {
+        logger.debug("Changing last name, item id = {}, new name = {}", professorId, newLastName);
         if (professorId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -120,6 +135,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void assignProfessorToCourse(int professorId, int courseId) throws DaoException {
+        logger.debug("Assigning professor to course, professor id = {}, course id = {}", professorId, courseId);
         if (professorId <= 0 || courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -128,6 +144,7 @@ public class ProfessorDaoImpl implements ProfessorDao {
 
     @Override
     public void deleteProfessorFromCourse(int professorId, int courseId) throws DaoException {
+        logger.debug("Deleting professor from course, professor id = {}, course id = {}", professorId, courseId);
         if (professorId <= 0 || courseId <= 0) {
             throw new DaoException(ID_ERROR);
         }

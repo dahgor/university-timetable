@@ -49,7 +49,7 @@ class TimePeriodDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void saveTimePeriod(TimePeriod timePeriod) {
+    private void saveTimePeriod(TimePeriod timePeriod) {
         jdbcTemplate.update("insert into time_periods(start_hour, end_hour) values (?, ?)",
                 timePeriod.getStartHour(), timePeriod.getEndHour());
     }

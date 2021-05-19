@@ -39,26 +39,26 @@ class CourseDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void saveCourse(Course course) {
+    private void saveCourse(Course course) {
         jdbcTemplate.update("insert into courses(course_name, course_description) values(?, ?)",
                 course.getName(), course.getDescription());
     }
 
-    void createProfessor(String firstName, String lastName) {
+    private void createProfessor(String firstName, String lastName) {
         jdbcTemplate.update("insert into professors(first_name, last_name) values (?, ?)",
                 firstName, lastName);
     }
 
-    void assignProfessorToCourse(int professorId, int courseId) {
+    private void assignProfessorToCourse(int professorId, int courseId) {
         jdbcTemplate.update("insert into professor_course(professor_id, course_id) values (?, ?)",
                 professorId, courseId);
     }
 
-    void createGroup(String groupName) {
+    private void createGroup(String groupName) {
         jdbcTemplate.update("insert into groups(group_name) values (?)", groupName);
     }
 
-    void assignGroupToCourse(int groupId, int courseId) {
+    private void assignGroupToCourse(int groupId, int courseId) {
         jdbcTemplate.update("insert into group_course(group_id, course_id) values (?, ?)",
                 groupId, courseId);
     }

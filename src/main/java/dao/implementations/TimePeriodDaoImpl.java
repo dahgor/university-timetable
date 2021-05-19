@@ -5,6 +5,8 @@ import dao.DaoProperties;
 import dao.entities.TimePeriod;
 import dao.interfaces.TimePeriodDao;
 import dao.mappers.TimePeriodMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,8 @@ import java.util.List;
 public class TimePeriodDaoImpl implements TimePeriodDao {
     public static final String NULL_ERROR = "Null is passed";
     public static final String ID_ERROR = "Invalid id is passed";
+
+    private static final Logger logger = LoggerFactory.getLogger(TimePeriodDaoImpl.class);
 
     private JdbcTemplate jdbc;
     private DaoProperties queries;
@@ -48,6 +52,7 @@ public class TimePeriodDaoImpl implements TimePeriodDao {
 
     @Override
     public int save(TimePeriod timePeriod) throws DaoException {
+        logger.debug("Saving to database, item = {}", timePeriod);
         if (timePeriod == null) {
             throw new DaoException(NULL_ERROR);
         }
@@ -60,12 +65,17 @@ public class TimePeriodDaoImpl implements TimePeriodDao {
             ps.setTimestamp(2, timePeriod.getEndHour());
             return ps;
         }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+        if (keyHolder.getKey() == null) {
+            throw new DaoException("Failed to get generated id from database");
+        }
+        int generatedId = keyHolder.getKey().intValue();
+        logger.debug("Generated id for {} is {}", timePeriod, generatedId);
+        return generatedId;
     }
 
     @Override
     public void deleteById(int id) throws DaoException {
+        logger.debug("Deleting from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -74,6 +84,7 @@ public class TimePeriodDaoImpl implements TimePeriodDao {
 
     @Override
     public TimePeriod findById(int id) throws DaoException {
+        logger.debug("Retrieving from database, item id = {}", id);
         if (id <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -85,11 +96,13 @@ public class TimePeriodDaoImpl implements TimePeriodDao {
 
     @Override
     public List<TimePeriod> findAllRecords() throws DaoException {
+        logger.debug("Retrieving all items from database");
         return jdbc.query(queries.getQuery("findAllRecords"), new TimePeriodMapper());
     }
 
     @Override
     public void changeStartHour(int timePeriodId, Timestamp newTime) throws DaoException {
+        logger.debug("Changing start hour, item id = {}, new time = {}", timePeriodId, newTime);
         if (timePeriodId <= 0) {
             throw new DaoException(ID_ERROR);
         }
@@ -101,6 +114,7 @@ public class TimePeriodDaoImpl implements TimePeriodDao {
 
     @Override
     public void changeEndHour(int timePeriodId, Timestamp newTime) throws DaoException {
+        logger.debug("Changing end hour, item id = {}, new time = {}", timePeriodId, newTime);
         if (timePeriodId <= 0) {
             throw new DaoException(ID_ERROR);
         }

@@ -37,7 +37,7 @@ class AuditoryDaoImplTest {
         daoProperties = new DaoProperties(file);
     }
 
-    void saveAuditory(Auditory auditory) {
+    private void saveAuditory(Auditory auditory) {
         jdbcTemplate.update("insert into auditories(auditory_location) VALUES (?)",
                 auditory.getLocation());
     }

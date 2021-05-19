@@ -3,11 +3,17 @@ package dao.entities;
 import java.util.Objects;
 
 public class Auditory {
+    private static final int NO_ID = 0;
 
     private int id;
     private String location;
 
     public Auditory() {
+    }
+
+    public Auditory(String location) {
+        this.id = NO_ID;
+        this.location = location;
     }
 
     public Auditory(int id, String location) {
@@ -47,7 +53,7 @@ public class Auditory {
 
     @Override
     public String toString() {
-        return "AuditoryEntity{" +
+        return "Auditory{" +
                 "id=" + id +
                 ", location='" + location + '\'' +
                 '}';
