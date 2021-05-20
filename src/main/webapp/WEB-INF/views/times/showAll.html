@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All times</title>
+</head>
+<body>
+
+<div th:each="item : ${times}">
+    <a th:text="${item.toString()}"/>
+</div>
+
+</body>
+</html>

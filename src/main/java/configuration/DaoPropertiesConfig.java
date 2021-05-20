@@ -4,66 +4,67 @@ import dao.DaoException;
 import dao.DaoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Configuration
 public class DaoPropertiesConfig {
 
     @Bean
-    public DaoProperties groupProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties groupProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/groupDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/groupDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties studentProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties studentProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/studentDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/studentDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties courseProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties courseProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/courseDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/courseDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties professorProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties professorProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/professorDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/professorDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties auditoryProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties auditoryProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/auditoryDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/auditoryDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties lessonProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties lessonProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/lessonDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/lessonDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties timePeriodProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties timePeriodProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/timePeriodDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/timePeriodDao.properties").getFile());
         return new DaoProperties(file);
     }
 
     @Bean
-    public DaoProperties timeProperties() throws FileNotFoundException, DaoException {
+    public DaoProperties timeProperties() throws IOException, DaoException {
         FileInputStream file =
-                new FileInputStream("./src/main/resources/daoProperties/timeDao.properties");
+                new FileInputStream(new ClassPathResource("daoProperties/timeDao.properties").getFile());
         return new DaoProperties(file);
     }
 }

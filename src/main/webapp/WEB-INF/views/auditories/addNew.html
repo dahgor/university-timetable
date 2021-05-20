@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New auditory</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/auditories}" th:object="${auditory}">
+    <label for="location">Enter auditory location: </label>
+    <input type="text" th:field="*{location}" id="location"/>
+    <br/>
+    <input type="submit" value="Create!"/>
+</form>
+
+</body>
+</html>

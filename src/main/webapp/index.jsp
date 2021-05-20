@@ -11,6 +11,6 @@
     <title>Title</title>
 </head>
 <body>
-
+<p>This is index page</p>
 </body>
 </html>
