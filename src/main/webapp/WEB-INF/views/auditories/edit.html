@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update auditory</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/auditories/{id}(id=${auditory.getId()})}" th:object="${auditory}">
+    <label for="location">Enter new auditory location: </label>
+    <input type="text" th:field="*{location}" id="location"/>
+    <br/>
+    <input type="submit" value="Update!"/>
+</form>
+
+</body>
+</html>
