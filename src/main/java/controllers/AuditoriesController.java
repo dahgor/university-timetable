@@ -54,4 +54,24 @@ public class AuditoriesController {
         }
         return "redirect:/auditories";
     }
+
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id) {
+        try {
+            model.addAttribute("auditory", auditoryService.findById(id));
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "auditories/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id, @ModelAttribute("auditory") Auditory auditory) {
+        try {
+            auditoryService.changeLocation(auditory, auditory.getLocation());
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/auditories";
+    }
 }
