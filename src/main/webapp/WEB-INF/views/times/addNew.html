@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New time</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/times}" th:object="${time}">
+    <label for="date">Enter date </label>
+    <input type="date" th:field="*{date}" id="date"/>
+    <br/>
+    <label for="timePeriod">Choose time period </label>
+    <select th:field="*{timePeriodId}" id="timePeriod">
+        <div th:each="item : ${timePeriods}">
+            <option th:value="${item.getId()}" th:text="${#strings.substring(item.getStartHour().toString(), 11, 16)}+
+            '-'+${#strings.substring(item.getEndHour().toString(), 11, 16)}"></option>
+        </div>
+    </select>
+    <br>
+    <input type="submit" value="Create!"/>
+</form>
+
+</body>
+</html>
