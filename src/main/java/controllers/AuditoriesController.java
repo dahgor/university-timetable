@@ -68,7 +68,20 @@ public class AuditoriesController {
     @PatchMapping("/{id}")
     public String update(@PathVariable("id") int id, @ModelAttribute("auditory") Auditory auditory) {
         try {
-            auditoryService.changeLocation(auditory, auditory.getLocation());
+            Auditory oldAuditory = auditoryService.findById(id);
+            if (!auditory.getLocation().equals(oldAuditory.getLocation())) {
+                auditoryService.changeLocation(auditory, auditory.getLocation());
+            }
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/auditories";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        try {
+            auditoryService.delete(new Auditory(id));
         } catch (ServiceException e) {
             e.printStackTrace();
         }
