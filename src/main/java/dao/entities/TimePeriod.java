@@ -13,6 +13,12 @@ public class TimePeriod {
     public TimePeriod() {
     }
 
+    public TimePeriod(int id) {
+        this.id = id;
+        this.startHour = null;
+        this.endHour = null;
+    }
+
     public TimePeriod(Timestamp startHour, Timestamp endHour) {
         this.id = NO_ID;
         this.startHour = startHour;

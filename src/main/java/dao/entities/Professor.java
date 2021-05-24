@@ -12,6 +12,12 @@ public class Professor {
     public Professor() {
     }
 
+    public Professor(int id) {
+        this.id = id;
+        this.firstName = null;
+        this.lastName = null;
+    }
+
     public Professor(String firstName, String lastName) {
         this.id = NO_ID;
         this.firstName = firstName;

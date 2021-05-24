@@ -13,6 +13,12 @@ public class Time {
     public Time() {
     }
 
+    public Time(int id) {
+        this.id = id;
+        this.timePeriodId = NO_ID;
+        this.date = null;
+    }
+
     public Time(Date date, int timePeriodId) {
         this.id = NO_ID;
         this.date = date;
