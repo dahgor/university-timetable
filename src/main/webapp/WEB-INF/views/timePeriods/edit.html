@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update time period</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/timePeriods/{id}(id=${timePeriod.getId()})}">
+    <label for="startHour">Enter start time: </label>
+    <input type="time" name="start" th:value="${start}" id="startHour"/>
+    <br/>
+    <label for="endHour">Enter end time: </label>
+    <input type="time" name="end" th:value="${end}" id="endHour"/>
+    <br/>
+    <input type="submit" value="Update!"/>
+</form>
+
+</body>
+</html>
