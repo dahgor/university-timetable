@@ -3,6 +3,7 @@ package dao.entities;
 import java.util.Objects;
 
 public class Group {
+    private static final int NO_ID = 0;
 
     private int id;
     private String name;
@@ -10,7 +11,13 @@ public class Group {
     public Group() {
     }
 
+    public Group(int id) {
+        this.id = id;
+        this.name = null;
+    }
+
     public Group(String name) {
+        this.id = NO_ID;
         this.name = name;
     }
 

@@ -11,6 +11,11 @@ public class Auditory {
     public Auditory() {
     }
 
+    public Auditory(int id) {
+        this.id = id;
+        this.location = null;
+    }
+
     public Auditory(String location) {
         this.id = NO_ID;
         this.location = location;
