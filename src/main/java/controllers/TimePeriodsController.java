@@ -8,19 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import services.ServiceException;
 import services.interfaces.TimePeriodService;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/timePeriods")
 public class TimePeriodsController {
-    private static final String SECONDS_SUFFIX = ":00";
-    private static final int EPOCH_YEAR = 1970;
-    private static final int EPOCH_MONTH = 1;
-    private static final int EPOCH_DAY = 1;
+    private static final String INPUT_FORMAT = "hh:mm";
 
     private TimePeriodService timePeriodService;
 
@@ -51,23 +47,20 @@ public class TimePeriodsController {
 
     @GetMapping("/new")
     public String addNew(Model model) {
-        model.addAttribute("timePeriod", new TimePeriod());
-        model.addAttribute("startHour", new Time(1));
-        model.addAttribute("endHour", new Time(1));
         return "timePeriods/addNew";
     }
 
     @PostMapping()
-    public String create(@RequestParam(value = "start", required = true) String startHour,
-                         @RequestParam(value = "end", required = true) String endHour) {
+    public String create(@RequestParam(value = "start", required = true) String start,
+                         @RequestParam(value = "end", required = true) String end) {
         try {
-            Time startTime = Time.valueOf(startHour + SECONDS_SUFFIX);
-            Time endTime = Time.valueOf(endHour + SECONDS_SUFFIX);
-            Timestamp start = Timestamp.valueOf(LocalDateTime.of(LocalDate.of(EPOCH_YEAR, EPOCH_MONTH, EPOCH_DAY), startTime.toLocalTime()));
-            Timestamp end = Timestamp.valueOf(LocalDateTime.of(LocalDate.of(EPOCH_YEAR, EPOCH_MONTH, EPOCH_DAY), endTime.toLocalTime()));
-            TimePeriod timePeriod = new TimePeriod(start, end);
-            timePeriodService.save(timePeriod);
-        } catch (ServiceException e) {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(INPUT_FORMAT);
+            Date parsedStart = inputFormat.parse(start);
+            Date parsedEnd = inputFormat.parse(end);
+            Timestamp startHour = new Timestamp(parsedStart.getTime());
+            Timestamp endHour = new Timestamp(parsedEnd.getTime());
+            timePeriodService.save(new TimePeriod(startHour, endHour));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "redirect:/timePeriods";
@@ -90,21 +83,22 @@ public class TimePeriodsController {
 
     @PatchMapping("/{id}")
     public String update(@PathVariable("id") int id,
-                         @RequestParam(value = "start", required = true) String startHour,
-                         @RequestParam(value = "end", required = true) String endHour) {
+                         @RequestParam(value = "start", required = true) String start,
+                         @RequestParam(value = "end", required = true) String end) {
         try {
             TimePeriod oldTimePeriod = timePeriodService.findById(id);
-            Time startTime = Time.valueOf(startHour + SECONDS_SUFFIX);
-            Time endTime = Time.valueOf(endHour + SECONDS_SUFFIX);
-            Timestamp start = Timestamp.valueOf(LocalDateTime.of(LocalDate.of(EPOCH_YEAR, EPOCH_MONTH, EPOCH_DAY), startTime.toLocalTime()));
-            Timestamp end = Timestamp.valueOf(LocalDateTime.of(LocalDate.of(EPOCH_YEAR, EPOCH_MONTH, EPOCH_DAY), endTime.toLocalTime()));
-            if (!oldTimePeriod.getStartHour().equals(start)) {
-                timePeriodService.changeStartHour(new TimePeriod(id), start);
+            SimpleDateFormat inputFormat = new SimpleDateFormat(INPUT_FORMAT);
+            Date parsedStart = inputFormat.parse(start);
+            Date parsedEnd = inputFormat.parse(end);
+            Timestamp startHour = new Timestamp(parsedStart.getTime());
+            Timestamp endHour = new Timestamp(parsedEnd.getTime());
+            if (!oldTimePeriod.getStartHour().equals(startHour)) {
+                timePeriodService.changeStartHour(new TimePeriod(id), startHour);
             }
-            if (!oldTimePeriod.getEndHour().equals(end)) {
-                timePeriodService.changeEndHour(new TimePeriod(id), end);
+            if (!oldTimePeriod.getEndHour().equals(endHour)) {
+                timePeriodService.changeEndHour(new TimePeriod(id), endHour);
             }
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "redirect:/timePeriods";
