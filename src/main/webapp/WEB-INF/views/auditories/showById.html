@@ -13,6 +13,8 @@
 <form th:method="DELETE" th:action="@{/auditories/{id}(id=${auditory.getId()})}">
     <input type="submit" value="Delete">
 </form>
+<br>
+<a th:text="Home" th:href="@{/auditories}"/>
 
 </body>
 </html>

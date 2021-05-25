@@ -7,7 +7,7 @@
 <body>
 
 <div th:each="item : ${auditories}">
-    <a th:text="${item.toString()}"/>
+    <a th:text="${item.toString()}" th:href="@{/auditories/{id}(id=${item.getId()})}"/>
 </div>
 
 </body>

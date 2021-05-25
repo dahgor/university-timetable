@@ -13,6 +13,7 @@
 <form th:method="DELETE" th:action="@{/timePeriods/{id}(id=${timePeriod.getId()})}">
     <input type="submit" value="Delete">
 </form>
-
+<br>
+<a th:text="Home" th:href="@{/timePeriods}"/>
 </body>
 </html>
