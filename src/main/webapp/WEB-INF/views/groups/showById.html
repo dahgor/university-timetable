@@ -13,6 +13,7 @@
 <form th:method="DELETE" th:action="@{/groups/{id}(id=${group.getId()})}">
     <input type="submit" value="Delete">
 </form>
-
+<br>
+<a th:text="Home" th:href="@{/groups}"/>
 </body>
 </html>
