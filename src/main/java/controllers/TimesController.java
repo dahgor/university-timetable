@@ -29,7 +29,7 @@ public class TimesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "times/showAll";
+        return "times/show-all";
     }
 
     @GetMapping("/{id}")
@@ -39,7 +39,7 @@ public class TimesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "times/showById";
+        return "times/show-by-id";
     }
 
     @GetMapping("/new")
@@ -50,7 +50,7 @@ public class TimesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "times/addNew";
+        return "times/add-new";
     }
 
     @PostMapping()

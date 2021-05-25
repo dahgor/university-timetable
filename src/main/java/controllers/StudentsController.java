@@ -29,7 +29,7 @@ public class StudentsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "students/showAll";
+        return "students/show-all";
     }
 
     @GetMapping("/{id}")
@@ -39,7 +39,7 @@ public class StudentsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "students/showById";
+        return "students/show-by-id";
     }
 
     @GetMapping("/new")
@@ -50,7 +50,7 @@ public class StudentsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "students/addNew";
+        return "students/add-new";
     }
 
     @PostMapping()

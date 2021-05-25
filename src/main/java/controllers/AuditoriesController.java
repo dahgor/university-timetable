@@ -26,7 +26,7 @@ public class AuditoriesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "auditories/showAll";
+        return "auditories/show-all";
     }
 
     @GetMapping("/{id}")
@@ -36,13 +36,13 @@ public class AuditoriesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "auditories/showById";
+        return "auditories/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
         model.addAttribute("auditory", new Auditory());
-        return "auditories/addNew";
+        return "auditories/add-new";
     }
 
     @PostMapping()

@@ -26,7 +26,7 @@ public class ProfessorsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "professors/showAll";
+        return "professors/show-all";
     }
 
     @GetMapping("/{id}")
@@ -36,13 +36,13 @@ public class ProfessorsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "professors/showById";
+        return "professors/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
         model.addAttribute("professor", new Professor());
-        return "professors/addNew";
+        return "professors/add-new";
     }
 
     @PostMapping()

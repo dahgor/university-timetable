@@ -32,7 +32,7 @@ public class TimePeriodsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "timePeriods/showAll";
+        return "timePeriods/show-all";
     }
 
     @GetMapping("/{id}")
@@ -42,12 +42,12 @@ public class TimePeriodsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "timePeriods/showById";
+        return "timePeriods/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
-        return "timePeriods/addNew";
+        return "add-new";
     }
 
     @PostMapping()

@@ -36,7 +36,7 @@ public class LessonsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "lessons/showAll";
+        return "lessons/show-all";
     }
 
     @GetMapping("/{id}")
@@ -46,7 +46,7 @@ public class LessonsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "lessons/showById";
+        return "lessons/show-by-id";
     }
 
     @GetMapping("/new")
@@ -60,7 +60,7 @@ public class LessonsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "lessons/addNew";
+        return "lessons/add-new";
     }
 
     @PostMapping()

@@ -26,7 +26,7 @@ public class GroupsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "groups/showAll";
+        return "groups/show-all";
     }
 
     @GetMapping("/{id}")
@@ -36,13 +36,13 @@ public class GroupsController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "groups/showById";
+        return "groups/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
         model.addAttribute("group", new Group());
-        return "groups/addNew";
+        return "groups/add-new";
     }
 
     @PostMapping()

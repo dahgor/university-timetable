@@ -26,7 +26,7 @@ public class CoursesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "courses/showAll";
+        return "courses/show-all";
     }
 
     @GetMapping("/{id}")
@@ -36,13 +36,13 @@ public class CoursesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "courses/showById";
+        return "courses/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
         model.addAttribute("course", new Course());
-        return "courses/addNew";
+        return "courses/add-new";
     }
 
     @PostMapping()
