@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiTemplate;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 @Configuration
@@ -26,17 +27,13 @@ public class DaoConfig {
     private DaoPropertiesConfig daoProperties;
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(user);
-        dataSource.setPassword(password);
-        return dataSource;
+    public DataSource dataSource() throws NamingException {
+        JndiTemplate jndi = new JndiTemplate();
+        return jndi.lookup("java:comp/env/jdbc/university", DataSource.class);
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
+    public JdbcTemplate jdbcTemplate() throws NamingException {
         return new JdbcTemplate(dataSource());
     }
 
