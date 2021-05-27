@@ -1,8 +1,10 @@
 package configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jndi.JndiTemplate;
 
@@ -12,16 +14,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("dao")
 @Import(DaoPropertiesConfig.class)
-@PropertySource("classpath:database.properties")
 public class DaoConfig {
-    @Value("${driverClassName}")
-    private String driver;
-    @Value("${url}")
-    private String url;
-    @Value("${user}")
-    private String user;
-    @Value("${password}")
-    private String password;
 
     @Autowired
     private DaoPropertiesConfig daoProperties;
