@@ -16,7 +16,7 @@ import java.util.Date;
 @Controller
 @RequestMapping("/timePeriods")
 public class TimePeriodsController {
-    private static final String INPUT_FORMAT = "hh:mm";
+    private static final String INPUT_FORMAT = "HH:mm";
 
     private TimePeriodService timePeriodService;
 
@@ -47,7 +47,7 @@ public class TimePeriodsController {
 
     @GetMapping("/new")
     public String addNew(Model model) {
-        return "add-new";
+        return "timePeriods/add-new";
     }
 
     @PostMapping()
