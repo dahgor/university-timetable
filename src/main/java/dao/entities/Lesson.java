@@ -14,6 +14,14 @@ public class Lesson {
     public Lesson() {
     }
 
+    public Lesson(int id) {
+        this.id = id;
+        this.courseId = NO_ID;
+        this.professorId = NO_ID;
+        this.groupId = NO_ID;
+        this.auditoryId = NO_ID;
+    }
+
     public Lesson(int courseId, int professorId, int groupId, int auditoryId) {
         this.id = NO_ID;
         this.courseId = courseId;

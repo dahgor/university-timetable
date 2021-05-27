@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New time period</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/timePeriods}">
+    <label for="startHour">Enter start time: </label>
+    <input type="time" th:name="start" id="startHour"/>
+    <br/>
+    <label for="endHour">Enter end time: </label>
+    <input type="time" th:name="end" id="endHour"/>
+    <br/>
+    <input type="submit" value="Create!"/>
+</form>
+
+</body>
+</html>

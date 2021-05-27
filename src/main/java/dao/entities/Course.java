@@ -12,6 +12,12 @@ public class Course {
     public Course() {
     }
 
+    public Course(int id) {
+        this.id = id;
+        this.name = null;
+        this.description = null;
+    }
+
     public Course(String name, String description) {
         this.id = NO_ID;
         this.name = name;

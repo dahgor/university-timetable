@@ -26,7 +26,7 @@ public class AuditoriesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "auditories/showAll";
+        return "auditories/show-all";
     }
 
     @GetMapping("/{id}")
@@ -36,19 +36,52 @@ public class AuditoriesController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "auditories/showById";
+        return "auditories/show-by-id";
     }
 
     @GetMapping("/new")
     public String addNew(Model model) {
         model.addAttribute("auditory", new Auditory());
-        return "auditories/addNew";
+        return "auditories/add-new";
     }
 
     @PostMapping()
     public String create(@ModelAttribute Auditory auditory) {
         try {
             auditoryService.save(auditory);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/auditories";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") int id) {
+        try {
+            model.addAttribute("auditory", auditoryService.findById(id));
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "auditories/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id, @ModelAttribute("auditory") Auditory auditory) {
+        try {
+            Auditory oldAuditory = auditoryService.findById(id);
+            if (!auditory.getLocation().equals(oldAuditory.getLocation())) {
+                auditoryService.changeLocation(auditory, auditory.getLocation());
+            }
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/auditories";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        try {
+            auditoryService.delete(new Auditory(id));
         } catch (ServiceException e) {
             e.printStackTrace();
         }

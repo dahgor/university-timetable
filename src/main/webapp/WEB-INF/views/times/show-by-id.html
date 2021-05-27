@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Time</title>
+</head>
+<body>
+
+<p th:text="${time.toString()}"/>
+<hr>
+<a th:href="@{/times/{id}/edit(id=${time.getId()})}">Edit</a>
+<br>
+<form th:method="DELETE" th:action="@{/times/{id}(id=${time.getId()})}">
+    <input type="submit" value="Delete">
+</form>
+<br>
+<a th:text="Home" th:href="@{/times}"/>
+</body>
+</html>

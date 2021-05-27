@@ -13,6 +13,13 @@ public class Student {
     public Student() {
     }
 
+    public Student(int id) {
+        this.id = id;
+        this.firstName = null;
+        this.lastName = null;
+        this.groupId = NO_ID;
+    }
+
     public Student(String firstName, String lastName, int groupId) {
         this.id = NO_ID;
         this.groupId = groupId;
